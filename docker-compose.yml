@@ -3,6 +3,6 @@ services:
   chizutsuru:
     build: .
     environment:
-      - CHIZUTSURU_PORT=8080
+      - CHIZUTSURU_PORT=${CHIZUTSURU_PORT}
     ports:
       - "8080:8080"
