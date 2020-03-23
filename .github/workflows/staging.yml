@@ -19,7 +19,7 @@ jobs:
       - name: Build :latest
         run: docker build -t ${{ secrets.DOCKER_IMAGE }}:latest .
         env:
-          CHIZUTSURU_PORT=${{ secrets.CHIZUTSURU_PORT }}
+          CHIZUTSURU_PORT: ${{ secrets.CHIZUTSURU_PORT }}
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
