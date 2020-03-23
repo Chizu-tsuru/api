@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.chizu.tsuru</groupId>
     <artifactId>chizutsuru-api</artifactId>
-    <version>${env.CHIZUTSURU_VERSION}</version>
+    <version>0.0.1-rc0</version>
     <name>api</name>
     <description>Demo project for Spring Boot</description>
 
