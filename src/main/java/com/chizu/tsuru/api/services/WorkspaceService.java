@@ -1,6 +1,5 @@
 package com.chizu.tsuru.api.services;
 
-import com.chizu.tsuru.api.DTO.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.DTO.GetWorkspaceDTO;
 import com.chizu.tsuru.api.Entities.Workspace;
 import com.chizu.tsuru.api.repositories.WorkspaceRepository;

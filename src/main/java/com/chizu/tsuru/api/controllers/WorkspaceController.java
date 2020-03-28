@@ -4,7 +4,6 @@ import com.chizu.tsuru.api.DTO.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.DTO.GetWorkspaceDTO;
 import com.chizu.tsuru.api.Entities.Cluster;
 import com.chizu.tsuru.api.Entities.Location;
-import com.chizu.tsuru.api.Entities.Tag;
 import com.chizu.tsuru.api.Entities.Workspace;
 import com.chizu.tsuru.api.exceptions.BadRequestException;
 import com.chizu.tsuru.api.services.URIService;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
 @RestController
 @RequestMapping("/workspaces")
 public class WorkspaceController {
