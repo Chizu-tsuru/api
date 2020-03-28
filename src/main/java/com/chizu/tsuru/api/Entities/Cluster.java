@@ -1,6 +1,8 @@
 package com.chizu.tsuru.api.Entities;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +11,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "clusters")
 public class Cluster implements Serializable {
 
@@ -23,10 +28,12 @@ public class Cluster implements Serializable {
 
     private String area;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonBackReference @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL  )
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Location> locations;
 }

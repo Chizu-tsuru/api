@@ -1,14 +1,21 @@
 package com.chizu.tsuru.api.Entities;
 
-import lombok.Data;
+import com.chizu.tsuru.api.DTO.GetWorkspaceDTO;
+import com.chizu.tsuru.api.services.URIService;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "workspaces")
 public class Workspace implements Serializable {
 
@@ -19,6 +26,15 @@ public class Workspace implements Serializable {
     @NotNull
     private String name;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cluster> clusters;
+
+    public GetWorkspaceDTO toResponse() {
+        return GetWorkspaceDTO.builder()
+                .name(name)
+                .clusters(URIService.getClusters(workspace_id).toString())
+                .build();
+    }
+
 }

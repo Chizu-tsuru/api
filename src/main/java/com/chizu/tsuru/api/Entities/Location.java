@@ -1,6 +1,8 @@
 package com.chizu.tsuru.api.Entities;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -8,6 +10,9 @@ import java.util.List;
 
 @Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "locations")
 public class Location {
 
@@ -21,10 +26,12 @@ public class Location {
     @NotNull
     private Double longitude;
 
+    @JsonBackReference @ToString.Exclude @EqualsAndHashCode.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "cluster_id")
     private Cluster cluster;
 
+    @JsonManagedReference
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "location_tag",
             joinColumns = @JoinColumn(name = "location_id"),

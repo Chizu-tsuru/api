@@ -1,10 +1,11 @@
 package com.chizu.tsuru.api.DTO;
 
-import com.chizu.tsuru.api.Entities.Location;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
+@Data
 public class CreateWorkspaceDTO {
 
     @NotNull
@@ -18,5 +19,9 @@ public class CreateWorkspaceDTO {
     @NotNull
     private double maxLong;
     @NotNull
-    private List<Location> locations;
+    private List<CreateLocationDTO> locations;
+
+    public boolean isValid() {
+        return minLat < maxLat && minLong < maxLong;
+    }
 }
