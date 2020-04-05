@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.Entities;
 
+import com.chizu.tsuru.api.DTO.GetLocationDTO;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -38,5 +39,11 @@ public class Location {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags;
+
+    public GetLocationDTO toResponse() {
+        return GetLocationDTO.builder()
+                .latitude(latitude)
+                .longitude(longitude).build();
+    }
 
 }

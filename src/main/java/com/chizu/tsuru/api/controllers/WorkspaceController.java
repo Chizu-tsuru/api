@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/workspaces")
@@ -78,36 +81,34 @@ public class WorkspaceController {
     }
 
     @GetMapping("/{idWorkspace}/clusters/{idCluster}/travel")
-    public String getPath(@PathVariable("idWorkspace") Integer idWorkspace,
+    public TravelDTO getPath(@PathVariable("idWorkspace") Integer idWorkspace,
                           @PathVariable("idCluster") Integer idCluster,
-                          @RequestParam(required = true) Double longitude,
-                          @RequestParam(required = true) Double latitude) {
+                          @RequestParam() Double longitude,
+                          @RequestParam() Double latitude) {
 
         Cluster cluster = clusterService.getCluster(idCluster);
+        Location reference = Location.builder().latitude(latitude).longitude(longitude).build();
 
-        var locations = new ArrayList<Location>();
+        List<Location> locations = new ArrayList<>();
         double distanceTotal = 0;
 
         while (cluster.getLocations().size() > 0) {
-            Location minLocation = cluster.getLocations().get(0);
-            Double min = mapService.getDistance(longitude, latitude, minLocation.getLongitude(), minLocation.getLatitude());
-            for(Location loc : cluster.getLocations()) {
-                Double distance = mapService.getDistance(longitude, latitude, loc.getLongitude(), loc.getLatitude());
-                if(distance <= min) {
-                    min = distance;
-                    minLocation = loc;
-                }
+            Optional<Location> minLocation = cluster.getLocations()
+                    .stream()
+                    .min((Comparator.comparing(location -> mapService.getDistance(reference, location))));
+
+            if (minLocation.isPresent()) {
+                Location min = minLocation.get();
+                locations.add(min);
+                distanceTotal += mapService.getDistance(reference, min);
+                reference.setLatitude(min.getLatitude());
+                reference.setLongitude(min.getLongitude());
+                cluster.getLocations().remove(min);
             }
-            locations.add(minLocation);
-            longitude = minLocation.getLongitude();
-            latitude = minLocation.getLatitude();
-            distanceTotal += min;
-            cluster.getLocations().remove(minLocation);
         }
 
-        System.out.println(locations);
-        System.out.println(distanceTotal);
-
-        return "salut les amis";
+        return TravelDTO.builder().distance(distanceTotal)
+                .locations(locations.stream().map(Location::toResponse).collect(Collectors.toList()))
+                .build();
     }
 }
