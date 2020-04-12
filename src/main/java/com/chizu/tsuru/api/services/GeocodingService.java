@@ -7,6 +7,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
 
@@ -20,23 +21,15 @@ public class GeocodingService {
     private String extractDataFromCoordonate(int index, String jsonResponse){
         try {
             JSONObject obj = new JSONObject(jsonResponse);
-            JSONObject res = obj.getJSONArray("results").getJSONObject(0).getJSONArray("address_components").getJSONObject(index);
-            return  res.getString("long_name");
+            JSONArray res = obj.getJSONArray("results");
+            if(res.length() != 0){
+                JSONObject result = res.getJSONObject(0).getJSONArray("address_components").getJSONObject(index);
+                return  result.getString("long_name");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private double extractDataFromLocation(String data, String jsonResponse ){
-        try {
-            JSONObject obj = new JSONObject(jsonResponse);
-            JSONObject res = obj.getJSONArray("results").getJSONObject(0).getJSONObject("geometry").getJSONObject("location");
-            return res.getDouble(data);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return 8;
     }
 
     private String getRequest(HttpGet request){
@@ -62,13 +55,6 @@ public class GeocodingService {
 
     }
 
-    public String getDataFromLocation(String address){
-        String httpEncodedString = address.replace(" ","+");
-        HttpGet request = new HttpGet(API_URL + "?address=" + httpEncodedString + "&key=" + API_KEY);
-
-        return getRequest(request);
-    }
-
     public String getFormattedAddressFromCoordonate(String jsonResponse){
         try {
             JSONObject obj = new JSONObject(jsonResponse);
@@ -79,15 +65,6 @@ public class GeocodingService {
         }
         return null;
     }
-
-    public String getStreetNumberFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(0, jsonResponse);
-    }
-
-    public String getRouteFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(1, jsonResponse);
-    }
-
     public String getCityFromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(2, jsonResponse);
     }
@@ -103,18 +80,5 @@ public class GeocodingService {
     public String getCountryFromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(5, jsonResponse);
     }
-
-    public String getPostalCodeFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(6, jsonResponse);
-    }
-
-    public double getLatitudeFromLocation(String jsonResponse){
-        return extractDataFromLocation("lat", jsonResponse);
-    }
-    public double getLongitudeFromLocation(String jsonResponse){
-        return extractDataFromLocation("lng", jsonResponse);
-    }
-
-
 
 }
