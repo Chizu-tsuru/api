@@ -1,5 +1,7 @@
 package com.chizu.tsuru.api.services;
 
+import com.chizu.tsuru.api.Entities.Address;
+import com.chizu.tsuru.api.Entities.Cluster;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -10,9 +12,11 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+@Service
 public class GeocodingService {
     private static String API_KEY = System.getenv("API_KEY");
     private static String API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
@@ -49,13 +53,7 @@ public class GeocodingService {
         return null;
     }
 
-    public String getDataFromCoordonate(double latitude, double longitude){
-        HttpGet request = new HttpGet(API_URL + "?latlng=" + latitude + "," + longitude + "&key=" + API_KEY);
-        return getRequest(request);
-
-    }
-
-    public String getFormattedAddressFromCoordonate(String jsonResponse){
+    private String getFormattedAddressFromCoordonate(String jsonResponse){
         try {
             JSONObject obj = new JSONObject(jsonResponse);
             JSONObject res = obj.getJSONArray("results").getJSONObject(0);
@@ -65,20 +63,39 @@ public class GeocodingService {
         }
         return null;
     }
-    public String getCityFromCoordonate(String jsonResponse){
+    private String getCityFromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(2, jsonResponse);
     }
 
-    public String getAdministrativeAreaLevel2FromCoordonate(String jsonResponse){
+    private String getAdministrativeAreaLevel2FromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(3, jsonResponse);
     }
 
-    public String getAdministrativeAreaLevel1FromCoordonate(String jsonResponse){
+    private String getAdministrativeAreaLevel1FromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(4, jsonResponse);
     }
 
-    public String getCountryFromCoordonate(String jsonResponse){
+    private String getCountryFromCoordonate(String jsonResponse){
         return extractDataFromCoordonate(5, jsonResponse);
     }
 
+    private String getAreaFromCoordonate(String jsonResponse){
+        return extractDataFromCoordonate(6, jsonResponse);
+    }
+
+    public String getDataFromCoordonate(double latitude, double longitude){
+        HttpGet request = new HttpGet(API_URL + "?latlng=" + latitude + "," + longitude + "&key=" + API_KEY);
+        return getRequest(request);
+    }
+
+    public Address convertResponseStringToAddressObject(String response, Cluster cluster){
+        Address add = Address.builder()
+                .administrative_area_1(getAdministrativeAreaLevel1FromCoordonate(response))
+                .administrative_area_2(getAdministrativeAreaLevel2FromCoordonate(response))
+                .area(getAreaFromCoordonate(response))
+                .city(getCityFromCoordonate(response))
+                .cluster(cluster)
+                .country(getCountryFromCoordonate(response)).build();
+        return add;
+    }
 }
