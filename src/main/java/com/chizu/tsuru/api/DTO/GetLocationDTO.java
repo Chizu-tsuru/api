@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TravelDTO {
-
-    private List<GetLocationDTO> locations;
-    private double distance;
+public class GetLocationDTO {
+    private Double longitude;
+    private Double latitude;
+    private String tags;
 }
