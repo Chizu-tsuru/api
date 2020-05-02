@@ -2,19 +2,20 @@ package com.chizu.tsuru.api.services;
 
 import com.chizu.tsuru.api.Entities.Location;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 
 public class CalculatorService {
 
     public double minAvgDist(ArrayList<Location> LocationList) {
-        ArrayList<Double> dist = listDist(LocationList);
+        ArrayList<Double> dist = anyClosestDist(LocationList);
         return dist
                 .stream()
                 .reduce(0.0, Double::sum)
                 / dist.size();
     }
 
-    private ArrayList<Double> listDist(ArrayList<Location> p) {
+    private ArrayList<Double> anyClosestDist(@NotNull ArrayList<Location> p) {
         ArrayList<Double> dist = new ArrayList<>();
         double d, c;
         for (int i = 0; i < p.size(); i++) {
@@ -31,12 +32,11 @@ public class CalculatorService {
         return dist;
     }
 
-    private double convertLocationsToKm(Location a, Location b) {
+    private double convertLocationsToKm(@NotNull Location a, @NotNull Location b) {
         double p = 0.017453292519943295;    // Math.PI / 180
         double res = 0.5 - Math.cos((b.getLatitude() - a.getLatitude()) * p) / 2 +
                 Math.cos(a.getLatitude() * p) * Math.cos(b.getLatitude() * p)
                         * (1 - Math.cos((b.getLongitude() - a.getLongitude()) * p)) / 2;
-
         return 12742 * Math.asin(Math.sqrt(res)); // 2 * R; R = 6371 km
     }
 }
