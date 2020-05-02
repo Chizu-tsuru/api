@@ -2,9 +2,7 @@ package com.chizu.tsuru.api.Entities;
 
 import com.chizu.tsuru.api.DTO.GetWorkspaceDTO;
 import com.chizu.tsuru.api.services.URIService;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -25,7 +23,7 @@ public class Workspace implements Serializable {
     @NotNull
     private String name;
 
-    @JsonManagedReference
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cluster> clusters;
 
