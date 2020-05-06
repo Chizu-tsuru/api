@@ -2,27 +2,25 @@ package com.chizu.tsuru.api.clusters.services;
 
 import com.chizu.tsuru.api.clusters.entities.Location;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(SpringExtension.class)
-@Import({
-        MinDistAvgService.class,
-        Location.class
-})
-
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@RunWith(SpringRunner.class)
+@SpringBootTest
 public class CalculatorServiceTests {
 
+    private final MinDistAvgService cs;
+
     @Autowired
-    private MinDistAvgService cs;
+    public CalculatorServiceTests(MinDistAvgService minDistAvgService) {
+        this.cs = minDistAvgService;
+    }
 
     @Test
     void should_return_a_double() {

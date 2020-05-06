@@ -28,11 +28,4 @@ public class Workspace implements Serializable {
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cluster> clusters;
 
-    public GetWorkspaceDTO toResponse() {
-        return GetWorkspaceDTO.builder()
-                .name(name)
-                .clusters(URIService.getClusters(workspace_id).toString())
-                .build();
-    }
-
 }
