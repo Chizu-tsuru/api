@@ -24,3 +24,11 @@ jobs:
         uses: actions-hub/docker@master
         with:
           args: push ${{ secrets.DOCKER_IMAGE }}:latest
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          - creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: deploy
+        uses: azure/webapps-container-deploy@v1
+        app-name: ${{ secrets.AZURE_APP_NAME }}
+        images: ${{ secrets.DOCKER_IMAGE }}:latest
