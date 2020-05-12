@@ -33,11 +33,19 @@ public class URIService {
                 .toUri();
     }
 
-    public URI getCluster(Integer workspaceId, Integer clusterId) {
+    public URI getCluster(Integer clusterId) {
         return ServletUriComponentsBuilder
-                .fromUri(getWorkspace(workspaceId))
+                .fromCurrentContextPath()
                 .path("/clusters/{id}")
                 .buildAndExpand(clusterId)
+                .toUri();
+    }
+
+    public URI getLocations(Integer clusterId) {
+        return ServletUriComponentsBuilder
+                .fromUri(getCluster(clusterId))
+                .path("/locations")
+                .build()
                 .toUri();
     }
 }
