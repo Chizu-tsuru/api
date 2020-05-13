@@ -65,8 +65,6 @@ public class MinDistAvgService {
                     }
             }
         }
-        printKruskal(graph);
-
         return kruskalToDist(graph);
     }
 
@@ -79,14 +77,6 @@ public class MinDistAvgService {
                 .stream()
                 .reduce(0.0, Double::sum)
                 / res.size();
-    }
-
-    // Visualization
-    private void printKruskal(ArrayList<Edge> graph) {
-        for (Edge e : graph) {
-            System.out.println("{\n\t(" + e.u.getLatitude() + "," + e.u.getLongitude() + ")");
-            System.out.println("\t(" + e.v.getLatitude() + "," + e.v.getLongitude() + ")\n}");
-        }
     }
 
     private ArrayList<Local> locationToLocal(ArrayList<Location> l) {
