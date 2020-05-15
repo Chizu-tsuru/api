@@ -1,7 +1,9 @@
 package com.chizu.tsuru.api.shared.services;
 
 import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
+import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
+import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,14 @@ public class ResponseService {
                 .longitude(c.getLongitude())
                 .locations(this.uriService.getLocations(c.getClusterId()).toString())
                 .workspace(this.uriService.getWorkspace(c.getWorkspace().getWorkspace_id()).toString())
+                .build();
+    }
+
+    public GetLocationDTO getLocationDTO(Location l) {
+        return GetLocationDTO.builder()
+                .latitude(l.getLatitude())
+                .longitude(l.getLongitude())
+//                .tags(l.getTags())
                 .build();
     }
 

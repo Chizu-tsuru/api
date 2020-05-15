@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -18,9 +19,15 @@ import java.io.IOException;
 
 @Service
 public class GeocodingService {
-    private static String API_KEY = System.getenv("API_KEY");
+
+    @Value("${spring.googlemap.apikey}")
+    private static String API_KEY;
     private static String API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
+
+    public GeocodingService(@Value("${spring.googlemap.apikey}") String api_key){
+        API_KEY = api_key;
+    }
 
     private String extractDataFromCoordonate(int index, String jsonResponse){
         try {
