@@ -21,13 +21,10 @@ import java.io.IOException;
 public class GeocodingService {
 
     @Value("${spring.googlemap.apikey}")
-    private static String API_KEY;
+    private String API_KEY;
+
     private static String API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
-
-    public GeocodingService(@Value("${spring.googlemap.apikey}") String api_key){
-        API_KEY = api_key;
-    }
 
     private String extractDataFromCoordonate(int index, String jsonResponse){
         try {

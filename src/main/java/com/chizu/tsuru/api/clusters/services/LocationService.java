@@ -7,6 +7,7 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,10 +39,27 @@ public class LocationService {
                 .orElseThrow(() -> new NotFoundException("Location not found"));
     }
 
+    // Par rapport un cluster / workspace
     @Transactional(readOnly = true)
     public List<GetLocationDTO> getLocations() {
         return locationRepository
                 .findAll()
+                .stream()
+                .map(this.responseService::getLocationDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetLocationDTO> getLocationsByCluster(Cluster cluster) {
+        return  locationRepository.findAllByCluster(cluster)
+                .stream()
+                .map(this.responseService::getLocationDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetLocationDTO> getLocationsByWorkspace(Workspace workspace) {
+        return  locationRepository.findAllByWorkspace(workspace)
                 .stream()
                 .map(this.responseService::getLocationDTO)
                 .collect(Collectors.toList());
