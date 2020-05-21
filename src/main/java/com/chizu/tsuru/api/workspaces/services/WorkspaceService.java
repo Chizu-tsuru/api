@@ -27,9 +27,13 @@ public class WorkspaceService {
     private final ResponseService responseService;
     private final GeocodingService geocodingService;
 
+    public final int LATITUDE = 0;
+    public final int LONGITUDE = 1;
+
     @Autowired
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
+            GeocodingService geocodingService,
             ResponseService responseService
     ) {
         this.workspaceRepository = workspaceRepository;
