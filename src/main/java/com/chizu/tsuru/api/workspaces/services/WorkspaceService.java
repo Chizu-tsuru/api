@@ -3,6 +3,9 @@ package com.chizu.tsuru.api.workspaces.services;
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
+import com.chizu.tsuru.api.clusters.entities.Tag;
+import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
+import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
@@ -24,8 +27,10 @@ import java.util.stream.Collectors;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final ClusterRepository clusterRepository;
     private final ResponseService responseService;
     private final GeocodingService geocodingService;
+    private final LocationService locationService;
 
     public final int LATITUDE = 0;
     public final int LONGITUDE = 1;
@@ -34,11 +39,15 @@ public class WorkspaceService {
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
             GeocodingService geocodingService,
-            ResponseService responseService
+            ResponseService responseService,
+            LocationService locationService,
+            ClusterRepository clusterRepository
     ) {
         this.workspaceRepository = workspaceRepository;
         this.responseService = responseService;
         this.geocodingService = geocodingService;
+        this.locationService = locationService;
+        this.clusterRepository = clusterRepository;
     }
 
     @Transactional(readOnly = true)
@@ -141,10 +150,20 @@ public class WorkspaceService {
                                 .cluster(cluster)
                                 .latitude(locationDTO.getLatitude())
                                 .longitude(locationDTO.getLongitude())
+                                .tags(new ArrayList<Tag>())
                                 .build();
 
                         locations.add(location);
 
+                        if(locationDTO.getTags() != null){
+                            for(String tag_name : locationDTO.getTags()){
+                                Tag tag = Tag.builder()
+                                        .name(tag_name)
+                                        .build();
+                                location.getTags().add(tag);
+
+                            }
+                        }
 
                         averageClusterLat += locationDTO.getLatitude();
                         averageClusterLong += locationDTO.getLongitude();
@@ -163,6 +182,13 @@ public class WorkspaceService {
                     Address address =  this.geocodingService.convertResponseStringToAddressObject(result,cluster);
 
                     cluster.setArea(address.getArea());
+
+                    cluster = this.clusterRepository.save(cluster);
+
+                    for (Location location : cluster.getLocations()){
+                        location.setCluster(cluster);
+                        this.locationService.createLocation(location);
+                    }
 
                     w.getClusters().add(cluster);
                 }
