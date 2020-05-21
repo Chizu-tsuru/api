@@ -5,6 +5,8 @@ import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
+import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
+import com.chizu.tsuru.api.shared.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import com.chizu.tsuru.api.workspaces.repositories.WorkspaceRepository;
@@ -15,19 +17,23 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final ResponseService responseService;
     private final GeocodingService geocodingService;
-    public final int LATITUDE = 0;
-    public final int LONGITUDE = 1;
 
     @Autowired
-    public WorkspaceService(WorkspaceRepository workspaceRepository, GeocodingService geocodingService) {
+    public WorkspaceService(
+            WorkspaceRepository workspaceRepository,
+            ResponseService responseService
+    ) {
         this.workspaceRepository = workspaceRepository;
+        this.responseService = responseService;
         this.geocodingService = geocodingService;
     }
 
@@ -36,8 +42,15 @@ public class WorkspaceService {
         return workspaceRepository
                 .findAll()
                 .stream()
-                .map(Workspace::toResponse)
+                .map(this.responseService::getWorkspaceDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Workspace getWorkspace(Integer id) {
+        return workspaceRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException("Workspace not found"));
     }
 
     @Transactional

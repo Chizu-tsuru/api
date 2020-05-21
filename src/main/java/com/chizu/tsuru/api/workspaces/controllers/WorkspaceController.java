@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.workspaces.controllers;
 
+import com.chizu.tsuru.api.shared.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
@@ -34,12 +35,20 @@ public class WorkspaceController {
 
     private final MapService mapService;
     private final ClusterService clusterService;
+    private final ResponseService responseService;
+    private final URIService uriService;
 
     @Autowired
-    public WorkspaceController(WorkspaceService workspaceService, MapService mapService, ClusterService clusterService) {
+    public WorkspaceController(WorkspaceService workspaceService,
+                               MapService mapService,
+                               URIService uriService,
+                               ResponseService responseService,
+                               ClusterService clusterService) {
         this.workspaceService = workspaceService;
         this.mapService = mapService;
         this.clusterService = clusterService;
+        this.responseService = responseService;
+        this.uriService = uriService;
     }
 
     @GetMapping
@@ -59,8 +68,14 @@ public class WorkspaceController {
 
 
         Integer workspaceId = this.workspaceService.createWorkspace(w);
-        URI location = URIService.fromParent(workspaceId);
+        URI location = this.uriService.fromParent(workspaceId);
         return ResponseEntity.created(location).build();
+    }
+
+    @GetMapping("/{idWorkspace}")
+    public GetWorkspaceDTO getWorkspace(@PathVariable("idWorkspace") Integer idWorkspace) {
+        return this.responseService
+                .getWorkspaceDTO(this.workspaceService.getWorkspace(idWorkspace));
     }
 
     @GetMapping("/{idWorkspace}/clusters/{idCluster}/travel")
