@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.workspaces.services;
 
+import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
@@ -20,12 +21,14 @@ import java.util.stream.Collectors;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final GeocodingService geocodingService;
     public final int LATITUDE = 0;
     public final int LONGITUDE = 1;
 
     @Autowired
-    public WorkspaceService(WorkspaceRepository workspaceRepository) {
+    public WorkspaceService(WorkspaceRepository workspaceRepository, GeocodingService geocodingService) {
         this.workspaceRepository = workspaceRepository;
+        this.geocodingService = geocodingService;
     }
 
     @Transactional(readOnly = true)
@@ -126,15 +129,22 @@ public class WorkspaceService {
                     }
                 }
 
-                averageClusterLat = locations.size() == 0 ? 0 : averageClusterLat /  locations.size();
-                averageClusterLong = locations.size() == 0 ? 0 : averageClusterLong /  locations.size();
+                if(locations.size() != 0){
+                    averageClusterLat = averageClusterLat / locations.size();
+                    averageClusterLong = averageClusterLong / locations.size();
 
-                cluster.setLatitude(averageClusterLat);
-                cluster.setLongitude(averageClusterLong);
+                    cluster.setLatitude(averageClusterLat);
+                    cluster.setLongitude(averageClusterLong);
 
-                // TODO: Pour chaque cluster, tapper sur l'api de Geocoding pour pouvoir récupérer le nom du clister
-                if(locations.size() != 0)
+                    String result = this.geocodingService.getDataFromCoordonate(averageClusterLat, averageClusterLong);
+
+                    Address address =  this.geocodingService.convertResponseStringToAddressObject(result,cluster);
+
+                    cluster.setArea(address.getArea());
+
                     w.getClusters().add(cluster);
+                }
+
             }
         }
 
