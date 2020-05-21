@@ -123,6 +123,9 @@ public class WorkspaceService {
                 clusterMinLong = j;
                 clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize: workspace.getMaxLat());
 
+                averageClusterLat = 0;
+                averageClusterLong = 0;
+
                 Cluster cluster = Cluster.builder()
                         .latitude(averageClusterLat)
                         .longitude(averageClusterLong)
@@ -141,6 +144,8 @@ public class WorkspaceService {
                                 .build();
 
                         locations.add(location);
+
+
                         averageClusterLat += locationDTO.getLatitude();
                         averageClusterLong += locationDTO.getLongitude();
                     }
