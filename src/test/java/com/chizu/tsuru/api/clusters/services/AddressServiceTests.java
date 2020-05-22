@@ -24,7 +24,7 @@ public class AddressServiceTests {
     private static ClusterRepository clusterRepository;
     private static GeocodingService geocodingService;
 
-    private static   AddressService addressService;
+    private static AddressService addressService;
 
     @BeforeClass
     public static void setup(){
