@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TravelDTO {
+public class GetTravelDTO {
 
     private List<GetLocationDTO> locations;
     private double distance;
