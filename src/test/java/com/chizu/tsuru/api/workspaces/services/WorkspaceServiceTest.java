@@ -36,7 +36,7 @@ class WorkspaceServiceTest {
     }
 
     @Test
-    void should_return_correct_latitude_diff() {
+    void should_return_correct_latitude_diff_1() {
         double min, max, expected, result;
 
         min = 30;
@@ -45,6 +45,11 @@ class WorkspaceServiceTest {
         result = ws.getAbsDiff(min, max, ws.LATITUDE);
         assertThat(result).isEqualTo(expected);
 
+    }
+
+    @Test
+    void should_return_correct_latitude_diff_2() {
+        double min, max, expected, result;
 
         min = -30;
         max = 40;
@@ -52,12 +57,23 @@ class WorkspaceServiceTest {
         result = ws.getAbsDiff(min, max, ws.LATITUDE);
         assertThat(result).isEqualTo(expected);
 
+    }
+
+    @Test
+    void should_return_correct_latitude_diff_3() {
+        double min, max, expected, result;
+
         min = 30;
         max = -40;
         expected = 70;
         result = ws.getAbsDiff(min, max, ws.LATITUDE);
         assertThat(result).isEqualTo(expected);
 
+    }
+
+    @Test
+    void should_return_correct_latitude_diff_4() {
+        double min, max, expected, result;
         min = -30;
         max = -40;
         expected = 10;
@@ -67,7 +83,7 @@ class WorkspaceServiceTest {
     }
 
     @Test
-    void should_return_correct_longitude_diff() {
+    void should_return_correct_longitude_diff_1() {
         double min, max, expected, result;
 
         min = 30;
@@ -76,11 +92,24 @@ class WorkspaceServiceTest {
         result = ws.getAbsDiff(min, max, ws.LONGITUDE);
         assertThat(result).isEqualTo(expected);
 
+    }
+
+    @Test
+    void should_return_correct_longitude_diff_2() {
+        double min, max, expected, result;
+
         min = -30;
         max = 40;
         expected = 70;
         result = ws.getAbsDiff(min, max, ws.LONGITUDE);
         assertThat(result).isEqualTo(expected);
+
+    }
+
+    @Test
+    void should_return_correct_longitude_diff_3() {
+        double min, max, expected, result;
+
 
         min = 30;
         max = -40;
@@ -88,11 +117,25 @@ class WorkspaceServiceTest {
         result = ws.getAbsDiff(min, max, ws.LONGITUDE);
         assertThat(result).isEqualTo(expected);
 
+
+    }
+
+    @Test
+    void should_return_correct_longitude_diff_4() {
+        double min, max, expected, result;
+
+
         min = -30;
         max = -40;
         expected = 350;
         result = ws.getAbsDiff(min, max, ws.LONGITUDE);
         assertThat(result).isEqualTo(expected);
+    }
+
+    @Test
+    void should_return_correct_longitude_diff_5() {
+        double min, max, expected, result;
+
 
         min = 60;
         max = 40;
