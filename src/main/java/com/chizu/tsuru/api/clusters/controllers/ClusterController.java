@@ -38,4 +38,11 @@ public class ClusterController {
         return this.travelService.getTravel(idCluster, longitude, latitude);
     }
 
+    @GetMapping("/{idCluster}/minMaxAvg")
+    public GetMinMaxAvgDTO getMinMaxAvg(@PathVariable("idCluster") Integer idCluster) {
+        var cluster = this.clusterRepository.findById(idCluster)
+                .orElseThrow(() -> new NotFoundException(idCluster + ": this cluster has not been found"));
+        return this.minDistAvgService.minAvgDist(cluster.getLocations());
+    }
+
 }
