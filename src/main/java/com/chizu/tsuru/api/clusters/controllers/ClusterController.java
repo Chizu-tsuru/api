@@ -1,11 +1,13 @@
 package com.chizu.tsuru.api.clusters.controllers;
 
 import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
+import com.chizu.tsuru.api.clusters.dto.GetMinMaxAvgDTO;
 import com.chizu.tsuru.api.clusters.dto.GetTravelDTO;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
+import com.chizu.tsuru.api.clusters.services.MinDistAvgService;
 import com.chizu.tsuru.api.clusters.services.TravelService;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +19,14 @@ public class ClusterController {
     private final ResponseService responseService;
     private final ClusterService clusterService;
     private final TravelService travelService;
+    private final MinDistAvgService minDistAvgService;
 
     public ClusterController(ResponseService responseService, ClusterService clusterService,
-                             TravelService travelService) {
+                             TravelService travelService, MinDistAvgService minDistAvgService) {
         this.responseService = responseService;
         this.clusterService = clusterService;
         this.travelService = travelService;
+        this.minDistAvgService = minDistAvgService;
     }
 
     @GetMapping("/{idCluster}")
@@ -40,8 +44,7 @@ public class ClusterController {
 
     @GetMapping("/{idCluster}/minMaxAvg")
     public GetMinMaxAvgDTO getMinMaxAvg(@PathVariable("idCluster") Integer idCluster) {
-        var cluster = this.clusterRepository.findById(idCluster)
-                .orElseThrow(() -> new NotFoundException(idCluster + ": this cluster has not been found"));
+        var cluster = this.clusterService.getCluster(idCluster);
         return this.minDistAvgService.minAvgDist(cluster.getLocations());
     }
 

@@ -10,7 +10,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.configurationprocessor.json.JSONArray;
 import org.springframework.boot.configurationprocessor.json.JSONException;
 import org.springframework.boot.configurationprocessor.json.JSONObject;
@@ -20,12 +19,14 @@ import java.io.IOException;
 
 @Service
 public class GeocodingService {
-    private static Configuration conf = new Configuration();
-    private static String API_KEY = conf.getApiKey();
-    private static String API_URL = conf.getApiUrl();
+    private final Configuration configuration;
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-    private String extractDataFromCoordonate(int index, String jsonResponse) {
+    public GeocodingService(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    private String extractDataFromCoordinate(int index, String jsonResponse) {
         try {
             JSONObject obj = new JSONObject(jsonResponse);
             JSONArray res = obj.getJSONArray("results");
@@ -56,38 +57,29 @@ public class GeocodingService {
         return null;
     }
 
-    private String getFormattedAddressFromCoordonate(String jsonResponse){
-        try {
-            JSONObject obj = new JSONObject(jsonResponse);
-            JSONObject res = obj.getJSONArray("results").getJSONObject(0);
-            return  res.getString("formatted_address");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
     private String getCityFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(2, jsonResponse);
+        return extractDataFromCoordinate(2, jsonResponse);
     }
 
     private String getAdministrativeAreaLevel2FromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(3, jsonResponse);
+        return extractDataFromCoordinate(3, jsonResponse);
     }
 
     private String getAdministrativeAreaLevel1FromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(4, jsonResponse);
+        return extractDataFromCoordinate(4, jsonResponse);
     }
 
     private String getCountryFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(5, jsonResponse);
+        return extractDataFromCoordinate(5, jsonResponse);
     }
 
     private String getAreaFromCoordonate(String jsonResponse){
-        return extractDataFromCoordonate(6, jsonResponse);
+        return extractDataFromCoordinate(6, jsonResponse);
     }
 
     public String getDataFromCoordonate(double latitude, double longitude){
-        HttpGet request = new HttpGet(API_URL + "?latlng=" + latitude + "," + longitude + "&key=" + API_KEY);
+        HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
+                + longitude + "&key=" + this.configuration.getApiKey());
         return getRequest(request);
     }
 
