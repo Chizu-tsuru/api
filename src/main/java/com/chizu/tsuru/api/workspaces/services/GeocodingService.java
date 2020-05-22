@@ -2,6 +2,7 @@ package com.chizu.tsuru.api.workspaces.services;
 
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
+import com.chizu.tsuru.api.config.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -18,17 +19,18 @@ import java.io.IOException;
 
 @Service
 public class GeocodingService {
-    private static String API_KEY = System.getenv("API_KEY");
-    private static String API_URL = "https://maps.googleapis.com/maps/api/geocode/json";
+    private static Configuration conf = new Configuration();
+    private static String API_KEY = conf.getApiKey();
+    private static String API_URL = conf.getApiUrl();
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-    private String extractDataFromCoordonate(int index, String jsonResponse){
+    private String extractDataFromCoordonate(int index, String jsonResponse) {
         try {
             JSONObject obj = new JSONObject(jsonResponse);
             JSONArray res = obj.getJSONArray("results");
-            if(res.length() != 0){
+            if (res.length() != 0) {
                 JSONObject result = res.getJSONObject(0).getJSONArray("address_components").getJSONObject(index);
-                return  result.getString("long_name");
+                return result.getString("long_name");
             }
         } catch (JSONException e) {
             e.printStackTrace();
