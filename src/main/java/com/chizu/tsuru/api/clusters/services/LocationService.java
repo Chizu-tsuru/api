@@ -80,11 +80,13 @@ public class LocationService {
                 .tags(new ArrayList<Tag>())
                 .build();
 
-        for( String tag :createLocationDTO.getTags()){
-            Tag t = Tag.builder()
-                    .name(tag)
-                    .build();
-            location.getTags().add(t);
+        if( createLocationDTO.getTags() != null ){
+            for( String tag :createLocationDTO.getTags()){
+                Tag t = Tag.builder()
+                        .name(tag)
+                        .build();
+                location.getTags().add(t);
+            }
         }
 
         Location created = locationRepository.save(location);

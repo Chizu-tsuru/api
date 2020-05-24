@@ -32,7 +32,7 @@ public class AddressService {
         Cluster c =  clusterRepository.findById(cluster_id).orElseThrow(()-> new NotFoundException("Cluster not found"));
 
         if( ! doesTheAddressAlreadyExist(c)){
-            String response = geocodingService.getDataFromCoordonate(c.getLatitude(),c.getLongitude());
+            String response = geocodingService.getDataFromCoordinate(c.getLatitude(),c.getLongitude());
             Address address = geocodingService.convertResponseStringToAddressObject(response, c);
 
             Address created = addressRepository.save(address);
