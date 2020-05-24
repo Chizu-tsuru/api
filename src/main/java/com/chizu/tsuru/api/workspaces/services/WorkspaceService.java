@@ -5,6 +5,7 @@ import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
+import com.chizu.tsuru.api.clusters.services.AddressService;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
@@ -33,6 +34,7 @@ public class WorkspaceService {
     private final GeocodingService geocodingService;
     private final LocationService locationService;
     private final ClusterService clusterService;
+    private final AddressService addressService;
 
     public final int LATITUDE = 0;
     public final int LONGITUDE = 1;
@@ -44,6 +46,7 @@ public class WorkspaceService {
             ResponseService responseService,
             LocationService locationService,
             ClusterRepository clusterRepository,
+            AddressService addressService,
             ClusterService clusterService
     ) {
         this.workspaceRepository = workspaceRepository;
@@ -52,6 +55,7 @@ public class WorkspaceService {
         this.locationService = locationService;
         this.clusterRepository = clusterRepository;
         this.clusterService = clusterService;
+        this.addressService = addressService;
     }
 
     @Transactional(readOnly = true)
@@ -168,13 +172,9 @@ public class WorkspaceService {
                     cluster.setLatitude(averageClusterLat);
                     cluster.setLongitude(averageClusterLong);
 
-                    String result = this.geocodingService.getDataFromCoordinate(averageClusterLat, averageClusterLong);
-
-                    Address address =  this.geocodingService.convertResponseStringToAddressObject(result,cluster);
+                    Address address = this.addressService.createAddress(cluster.getClusterId());
 
                     cluster.setArea(address.getArea());
-
-                    cluster = this.clusterRepository.save(cluster);
 
                     w.getClusters().add(cluster);
                 }

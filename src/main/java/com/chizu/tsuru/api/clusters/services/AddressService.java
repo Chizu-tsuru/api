@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AddressService {
 
-    private AddressRepository addressRepository;
-    private ClusterRepository clusterRepository;
-    private GeocodingService geocodingService;
+    private final AddressRepository addressRepository;
+    private final ClusterRepository clusterRepository;
+    private final GeocodingService geocodingService;
 
     @Autowired
     public AddressService(AddressRepository addressRepository,
@@ -27,7 +27,7 @@ public class AddressService {
     }
 
     @Transactional
-    public Integer createAddress(int cluster_id) {
+    public Address createAddress(int cluster_id) {
 
         Cluster c =  clusterRepository.findById(cluster_id).orElseThrow(()-> new NotFoundException("Cluster not found"));
 
@@ -36,12 +36,12 @@ public class AddressService {
             Address address = geocodingService.convertResponseStringToAddressObject(response, c);
 
             Address created = addressRepository.save(address);
-            return created.getAddressId();
+            return created;
         }
-        return 0;
+        return null;
     }
 
     private boolean doesTheAddressAlreadyExist(Cluster cluster){
-        return  addressRepository.findOneByCluster(cluster)  == null ? false:true;
+        return addressRepository.findOneByCluster(cluster) != null;
     }
 }
