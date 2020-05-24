@@ -29,9 +29,7 @@ import java.util.stream.Collectors;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final ClusterRepository clusterRepository;
     private final ResponseService responseService;
-    private final GeocodingService geocodingService;
     private final LocationService locationService;
     private final ClusterService clusterService;
     private final AddressService addressService;
@@ -42,18 +40,14 @@ public class WorkspaceService {
     @Autowired
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
-            GeocodingService geocodingService,
             ResponseService responseService,
             LocationService locationService,
-            ClusterRepository clusterRepository,
             AddressService addressService,
             ClusterService clusterService
     ) {
         this.workspaceRepository = workspaceRepository;
         this.responseService = responseService;
-        this.geocodingService = geocodingService;
         this.locationService = locationService;
-        this.clusterRepository = clusterRepository;
         this.clusterService = clusterService;
         this.addressService = addressService;
     }
@@ -121,8 +115,6 @@ public class WorkspaceService {
         double clusterMaxLat;
         double clusterMinLong;
         double clusterMaxLong;
-        double averageClusterLat = 0;
-        double averageClusterLong = 0;
 
         Workspace w = Workspace.builder()
                 .name(workspace.getName())
@@ -139,17 +131,13 @@ public class WorkspaceService {
                 clusterMinLong = j;
                 clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize: workspace.getMaxLat());
 
-                averageClusterLat = 0;
-                averageClusterLong = 0;
-
                 Cluster cluster = Cluster.builder()
-                        .latitude(averageClusterLat)
-                        .longitude(averageClusterLong)
+                        .latitude(0)
+                        .longitude(0)
                         .area("Temp")
                         .locations(new ArrayList<>())
                         .workspace(w)
                         .build();
-
 
                 for(CreateLocationDTO locationDTO : workspace.getLocations()){
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
@@ -160,17 +148,14 @@ public class WorkspaceService {
 
                         cluster.getLocations().add(location);
 
-                        averageClusterLat += locationDTO.getLatitude();
-                        averageClusterLong += locationDTO.getLongitude();
+                        cluster.setLatitude(cluster.getLatitude() + locationDTO.getLatitude());
+                        cluster.setLongitude(cluster.getLongitude() + locationDTO.getLongitude());
                     }
                 }
 
                 if(cluster.getLocations().size() != 0){
-                    averageClusterLat = averageClusterLat / cluster.getLocations().size();
-                    averageClusterLong = averageClusterLong / cluster.getLocations().size();
-
-                    cluster.setLatitude(averageClusterLat);
-                    cluster.setLongitude(averageClusterLong);
+                    cluster.setLatitude(cluster.getLatitude() / cluster.getLocations().size());
+                    cluster.setLongitude(cluster.getLongitude() / cluster.getLocations().size());
 
                     Address address = this.addressService.createAddress(cluster.getClusterId());
 
@@ -181,7 +166,6 @@ public class WorkspaceService {
 
             }
         }
-
         return w;
     }
 
