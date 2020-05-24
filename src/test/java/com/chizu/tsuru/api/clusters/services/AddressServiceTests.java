@@ -56,6 +56,6 @@ public class AddressServiceTests {
 
     @Test
     public void createAddress_should_return_1_test(){
-        assertThat(addressService.createAddress(1)).isEqualTo(1);
+        assertThat(addressService.createAddress(1).getAddressId()).isEqualTo(1);
     }
 }

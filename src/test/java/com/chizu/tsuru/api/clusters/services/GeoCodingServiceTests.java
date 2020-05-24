@@ -3,22 +3,21 @@ package com.chizu.tsuru.api.clusters.services;
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
 public class GeoCodingServiceTests {
 
+    private final GeocodingService geocodingService;
+
     @Autowired
-    private GeocodingService geocodingService;
+    public GeoCodingServiceTests(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
+    }
+
 
     @Test
     public void getDataFromCoordinate_should_return_a_string_test() {
