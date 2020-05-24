@@ -9,11 +9,13 @@ import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
 import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,12 +71,26 @@ public class LocationService {
     }
 
     @Transactional
-    public Integer createLocation(Location l) {
-        clusterRepository.findById(l.getCluster().getClusterId()).orElseThrow(() -> new NotFoundException("Cluster not found"));
-        Location created = locationRepository.save(l);
-        for(Tag t: l.getTags()){
+    public Location createLocation(CreateLocationDTO createLocationDTO,Integer clusterId) {
+        Cluster c = clusterRepository.findById(clusterId).orElseThrow(() -> new NotFoundException("Cluster not found"));
+        Location location = Location.builder()
+                .cluster(c)
+                .latitude(createLocationDTO.getLatitude())
+                .longitude(createLocationDTO.getLongitude())
+                .tags(new ArrayList<Tag>())
+                .build();
+
+        for( String tag :createLocationDTO.getTags()){
+            Tag t = Tag.builder()
+                    .name(tag)
+                    .build();
+            location.getTags().add(t);
+        }
+
+        Location created = locationRepository.save(location);
+        for(Tag t: location.getTags()){
             tagRepository.save(t);
         }
-        return created.getLocationId();
+        return created;
     }
 }

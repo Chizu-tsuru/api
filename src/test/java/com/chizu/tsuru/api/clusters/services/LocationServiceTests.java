@@ -7,12 +7,14 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
 import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,6 +76,12 @@ public class LocationServiceTests {
 
     @Test
     public void createLocation_should_return_3_test(){
-        assertThat(locationService.createLocation(location)).isEqualTo(3);
+        CreateLocationDTO createLocationDTO = new CreateLocationDTO();
+        createLocationDTO.setLatitude(location.getLatitude());
+        createLocationDTO.setLongitude(location.getLongitude());
+        createLocationDTO.setTags(Arrays.asList("Tag Test"));
+
+        assertThat(locationService.createLocation(createLocationDTO, cluster.getClusterId()).getLocationId()).isEqualTo(3);
+
     }
 }

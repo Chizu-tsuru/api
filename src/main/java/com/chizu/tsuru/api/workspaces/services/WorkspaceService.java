@@ -146,24 +146,24 @@ public class WorkspaceService {
                 for(CreateLocationDTO locationDTO : workspace.getLocations()){
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
                             && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)){
-                        Location location = Location.builder()
-                                .cluster(cluster)
-                                .latitude(locationDTO.getLatitude())
-                                .longitude(locationDTO.getLongitude())
-                                .tags(new ArrayList<Tag>())
-                                .build();
-
-                        locations.add(location);
-
-                        if(locationDTO.getTags() != null){
-                            for(String tag_name : locationDTO.getTags()){
-                                Tag tag = Tag.builder()
-                                        .name(tag_name)
-                                        .build();
-                                location.getTags().add(tag);
-
-                            }
-                        }
+//                        Location location = Location.builder()
+//                                .cluster(cluster)
+//                                .latitude(locationDTO.getLatitude())
+//                                .longitude(locationDTO.getLongitude())
+//                                .tags(new ArrayList<Tag>())
+//                                .build();
+//
+//                        locations.add(location);
+//
+//                        if(locationDTO.getTags() != null){
+//                            for(String tag_name : locationDTO.getTags()){
+//                                Tag tag = Tag.builder()
+//                                        .name(tag_name)
+//                                        .build();
+//                                location.getTags().add(tag);
+//
+//                            }
+//                        }
 
                         averageClusterLat += locationDTO.getLatitude();
                         averageClusterLong += locationDTO.getLongitude();
@@ -177,7 +177,7 @@ public class WorkspaceService {
                     cluster.setLatitude(averageClusterLat);
                     cluster.setLongitude(averageClusterLong);
 
-                    String result = this.geocodingService.getDataFromCoordonate(averageClusterLat, averageClusterLong);
+                    String result = this.geocodingService.getDataFromCoordinate(averageClusterLat, averageClusterLong);
 
                     Address address =  this.geocodingService.convertResponseStringToAddressObject(result,cluster);
 
