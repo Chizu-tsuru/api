@@ -25,7 +25,7 @@ jobs:
       - name: Push to docker hub ${{ steps.get_version.outputs.VERSION }}
         uses: actions-hub/docker@master
         with:
-          args: push tag ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}}
+          args: push ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}}
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
