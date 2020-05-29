@@ -10,22 +10,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+      - uses: olegtarasov/get-tag@v2
+          id: tagName
+          with:
+            tagRegex: "release-(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+            tagRegexGroup: 1 # Optional. Default is 1.
       - name: Login to Docker Hub
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build version
-        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} .
+        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:$GIT_TAG_NAME .
       - name: Tag image latest
-        run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} ${{ secrets.DOCKER_IMAGE }}:latest
-      - name: Push to docker hub ${{ steps.get_version.outputs.VERSION }}
+        run: docker tag ${{ secrets.DOCKER_IMAGE }}:$GIT_TAG_NAME ${{ secrets.DOCKER_IMAGE }}:latest
+      - name: Push to docker hub ${{ $GIT_TAG_NAME }}
         uses: actions-hub/docker@master
         with:
-          args: push ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}}
+          args: push ${{ secrets.DOCKER_IMAGE }}:$GIT_TAG_NAME
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
@@ -38,4 +40,4 @@ jobs:
         uses: azure/webapps-container-deploy@v1
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
-          images: ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.SOURCE_TAG}}
+          images: ${{ secrets.DOCKER_IMAGE }}:$GIT_TAG_NAME
