@@ -18,18 +18,18 @@ jobs:
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build version ${{ steps.branch_name.outputs.SOURCE_TAG }}
-        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}} .
+      - name: Build version
+        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} .
       - name: Tag image latest
-        run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}} ${{ secrets.DOCKER_IMAGE }}:latest
-      - name: Push to docker hub :${{ steps.branch_name.outputs.SOURCE_TAG }}
+        run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} ${{ secrets.DOCKER_IMAGE }}:latest
+      - name: Push to docker hub :${{ steps.get_version.outputs.VERSION }}
         uses: actions-hub/docker@master
         with:
-          args: push ${{ secrets.DOCKER_IMAGE }}:latest
+          args: push tag version
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
-          args: push ${{ secrets.DOCKER_IMAGE }}:latest
+          args: push tag latest
       - name: Azure login
         uses: azure/login@v1
         with:
@@ -38,4 +38,4 @@ jobs:
         uses: azure/webapps-container-deploy@v1
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
-          images: ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}}
+          images: ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.SOURCE_TAG}}
