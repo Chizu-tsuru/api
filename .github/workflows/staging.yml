@@ -10,17 +10,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
+      - uses: olegtarasov/get-tag@v2
+      id: tag
+      with:
+        tagRegex: "release-(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+        tagRegexGroup: 1 # Optional. Default is 1.
 
       - name: Login to Docker Hub
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build :latest
-        run: docker build -t ${{ secrets.DOCKER_IMAGE }}:latest .
-        env:
-          CHIZUTSURU_PORT: ${{ secrets.CHIZUTSURU_PORT }}
-      - name: Push to docker hub :latest
-        uses: actions-hub/docker@master
-        with:
-          args: push ${{ secrets.DOCKER_IMAGE }}:latest
+          - name: Build version
+            run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }} .
+          - name: Tag image staging-latest
+            run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }} ${{ secrets.DOCKER_IMAGE }}:staging-latest
+          - name: Push to docker hub ${{ steps.tag.outputs.tag }}
+            uses: actions-hub/docker@master
+            with:
+              args: push ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }}
+          - name: Push to docker hub :staging-latest
+            uses: actions-hub/docker@master
+            with:
+              args: push ${{ secrets.DOCKER_IMAGE }}:staging-latest
+          - name: deploy
+            run: curl ${{ secrets.STAGING_WEBHOOK }}
