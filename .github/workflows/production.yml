@@ -11,10 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: olegtarasov/get-tag@v2
-          id: tagName
-          with:
-            tagRegex: "release-(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
-            tagRegexGroup: 1 # Optional. Default is 1.
+        id: tagName
+        with:
+          tagRegex: "release-(.*)"  # Optional. Returns specified group text as tag name. Full tag string is returned if regex is not defined.
+          tagRegexGroup: 1 # Optional. Default is 1.
       - name: Login to Docker Hub
         uses: actions-hub/docker/login@master
         env:
