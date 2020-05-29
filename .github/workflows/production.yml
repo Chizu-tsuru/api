@@ -23,9 +23,9 @@ jobs:
       - name: Tag image latest
         run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}} ${{ secrets.DOCKER_IMAGE }}:latest
       - name: Push to docker hub :${{ steps.branch_name.outputs.SOURCE_TAG }}
-          uses: actions-hub/docker@master
-          with:
-            args: push ${{ secrets.DOCKER_IMAGE }}:latest
+        uses: actions-hub/docker@master
+        with:
+          args: push ${{ secrets.DOCKER_IMAGE }}:latest
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
