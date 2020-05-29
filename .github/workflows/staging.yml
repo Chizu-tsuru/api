@@ -33,4 +33,4 @@ jobs:
         with:
           args: push ${{ secrets.DOCKER_IMAGE }}:staging-latest
       - name: deploy
-        run: curl ${{ secrets.STAGING_WEBHOOK }
+        run: curl ${{ secrets.STAGING_WEBHOOK }}
