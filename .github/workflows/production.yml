@@ -10,16 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
       - name: Login to Docker Hub
         uses: actions-hub/docker/login@master
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Build :latest
-        run: docker build --build-arg MYSQL_PORT_ARG=${{ secrets.DATABASE_PORT}} --build-arg MYSQL_HOST_ARG=${{ secrets.DATABASE_HOST}} --build-arg MYSQL_USERNAME_ARG=${{ secrets.DATABASE_USERNAME}} --build-arg MYSQL_PASSWORD_ARG=${{ secrets.DATABASE_PASSWORD}} -t ${{ secrets.DOCKER_IMAGE }}:latest .
-        env:
-          PORT: ${{ secrets.CHIZUTSURU_PORT }}
+      - name: Build version ${{ steps.branch_name.outputs.SOURCE_TAG }}
+        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}} .
+      - name: Tag image latest
+        run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}} ${{ secrets.DOCKER_IMAGE }}:latest
+      - name: Push to docker hub :${{ steps.branch_name.outputs.SOURCE_TAG }}
+          uses: actions-hub/docker@master
+          with:
+            args: push ${{ secrets.DOCKER_IMAGE }}:latest
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
@@ -32,4 +38,4 @@ jobs:
         uses: azure/webapps-container-deploy@v1
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
-          images: ${{ secrets.DOCKER_IMAGE }}:latest
+          images: ${{ secrets.DOCKER_IMAGE }}:${{steps.branch_name.outputs.SOURCE_TAG}}
