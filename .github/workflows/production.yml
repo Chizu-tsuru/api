@@ -22,14 +22,14 @@ jobs:
         run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} .
       - name: Tag image latest
         run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}} ${{ secrets.DOCKER_IMAGE }}:latest
-      - name: Push to docker hub :${{ steps.get_version.outputs.VERSION }}
+      - name: Push to docker hub ${{ steps.get_version.outputs.VERSION }}
         uses: actions-hub/docker@master
         with:
-          args: push tag version
+          args: push tag ${{ secrets.DOCKER_IMAGE }}:${{steps.get_version.outputs.VERSION}}
       - name: Push to docker hub :latest
         uses: actions-hub/docker@master
         with:
-          args: push tag latest
+          args: push ${{ secrets.DOCKER_IMAGE }}:latest
       - name: Azure login
         uses: azure/login@v1
         with:
