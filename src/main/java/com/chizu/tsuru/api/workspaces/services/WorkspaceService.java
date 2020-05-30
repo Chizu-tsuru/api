@@ -159,7 +159,7 @@ public class WorkspaceService {
 
                     Address address = this.addressService.createAddress(cluster.getClusterId());
 
-                    cluster.setArea(address.getArea());
+                    cluster.setArea(address.getCity() + ", " + address.getCountry());
 
                     w.getClusters().add(cluster);
                 }
