@@ -40,16 +40,39 @@ public class LuceneService {
         this.configuration = configuration;
     }
 
-    public void searchWorkspace(){
+    public void searchLocationByLatitude(String query, int count){
+        try {
+            luceneManager.searchQuery("latitude", query, count);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    public void searchLocationByLongitude(String query, int count){
+        try {
+            luceneManager.searchQuery("longitude", query, count);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void searchLocationByRange(String field, String query, int count){
+        try {
+            luceneManager.searchQuery(field, query, count);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 
 class LuceneManager{
+    private Directory index;
+    private StandardAnalyzer analyzer;
+
     public LuceneManager(LocationRepository locationRepository, String luceneFolder) {
         try {
-            StandardAnalyzer analyzer = new StandardAnalyzer();
-            Directory index = MMapDirectory.open(Paths.get(luceneFolder));
+            analyzer = new StandardAnalyzer();
+            index = MMapDirectory.open(Paths.get(luceneFolder));
 
             IndexWriterConfig config = new IndexWriterConfig(analyzer);
 
@@ -62,24 +85,7 @@ class LuceneManager{
             }
 
             w.close();
-
-            String querystr = "1";
-
-            Query q = new QueryParser("locationId", analyzer).parse(querystr);
-
-
-            IndexReader reader = DirectoryReader.open(index);
-            IndexSearcher searcher = new IndexSearcher(reader);
-            TopDocs docs = searcher.search(q, 500);
-            ScoreDoc[] hits = docs.scoreDocs;
-
-            System.out.println("Found " + hits.length + " hits.");
-            for(int i=0;i<hits.length;++i) {
-                int docId = hits[i].doc;
-                Document d = searcher.doc(docId);
-                System.out.println((i + 1) + ". " + d.get("locationId") + "\t" + d.get("latitude")  + "\t" + d.get("longitude")  + "\t" + d.get("cluster"));
-            }
-        }catch (IOException | ParseException e) {
+        }catch (IOException  e) {
             e.printStackTrace();
         }
 
@@ -87,10 +93,10 @@ class LuceneManager{
 
     private static void addDoc(IndexWriter w, Location location) throws IOException {
         Document doc = new Document();
-        doc.add(new TextField("locationId", location.getLocationId().toString(), Field.Store.YES));
+        doc.add(new StoredField("locationId", location.getLocationId()));
         doc.add(new TextField("latitude", location.getLatitude().toString(), Field.Store.YES));
         doc.add(new TextField("longitude", location.getLongitude().toString(), Field.Store.YES));
-        doc.add(new TextField("cluster", location.getCluster().getClusterId().toString(), Field.Store.YES));
+        doc.add(new StoredField("cluster", location.getCluster().getClusterId().toString()));
 //        doc.add(new TextField("Tag", location.getTags().toString(), Field.Store.YES));
         w.addDocument(doc);
     }
@@ -98,4 +104,24 @@ class LuceneManager{
     private List<Location> getLocations(LocationRepository locationRepository){
         return locationRepository.findAll();
     }
+
+    public void searchQuery(String field, String query, int count) throws ParseException, IOException {
+
+
+        Query q = new QueryParser(field, analyzer).parse(query);
+
+        IndexReader reader = DirectoryReader.open(index);
+        IndexSearcher searcher = new IndexSearcher(reader);
+        TopDocs docs = searcher.search(q,count);
+        ScoreDoc[] hits = docs.scoreDocs;
+
+        System.out.println("Found " + hits.length + " hits.");
+        for(int i=0;i<hits.length;++i) {
+            int docId = hits[i].doc;
+            Document d = searcher.doc(docId);
+            System.out.println((i + 1) + ". " + d.get("locationId") + "\t" + d.get("latitude")  + "\t" + d.get("longitude")  + "\t" + d.get("cluster"));
+        }
+    }
+
+
 }

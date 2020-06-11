@@ -3,11 +3,7 @@ package com.chizu.tsuru.api.clusters.controllers;
 import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
 import com.chizu.tsuru.api.clusters.dto.GetMinMaxAvgDTO;
 import com.chizu.tsuru.api.clusters.dto.GetTravelDTO;
-import com.chizu.tsuru.api.clusters.entities.Cluster;
-import com.chizu.tsuru.api.clusters.entities.Location;
-import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
-import com.chizu.tsuru.api.clusters.services.LuceneService;
 import com.chizu.tsuru.api.clusters.services.MinDistAvgService;
 import com.chizu.tsuru.api.clusters.services.TravelService;
 import com.chizu.tsuru.api.shared.services.ResponseService;
@@ -21,16 +17,14 @@ public class ClusterController {
     private final ClusterService clusterService;
     private final TravelService travelService;
     private final MinDistAvgService minDistAvgService;
-    private final LuceneService luceneService;
 
     public ClusterController(ResponseService responseService, ClusterService clusterService,
-                             TravelService travelService, MinDistAvgService minDistAvgService,
-                             LuceneService luceneService) {
+                             TravelService travelService, MinDistAvgService minDistAvgService) {
         this.responseService = responseService;
         this.clusterService = clusterService;
         this.travelService = travelService;
         this.minDistAvgService = minDistAvgService;
-        this.luceneService = luceneService;
+
     }
 
     @GetMapping("/{idCluster}")
@@ -52,9 +46,6 @@ public class ClusterController {
         return this.minDistAvgService.minAvgDist(cluster.getLocations());
     }
 
-    @GetMapping("/lucene")
-    public void getLucene() {
-        luceneService.searchWorkspace();
-    }
+
 
 }
