@@ -5,6 +5,8 @@ import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
+import com.chizu.tsuru.api.clusters.services.AddressService;
+import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
@@ -27,10 +29,10 @@ import java.util.stream.Collectors;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
-    private final ClusterRepository clusterRepository;
     private final ResponseService responseService;
-    private final GeocodingService geocodingService;
     private final LocationService locationService;
+    private final ClusterService clusterService;
+    private final AddressService addressService;
 
     public final int LATITUDE = 0;
     public final int LONGITUDE = 1;
@@ -38,16 +40,16 @@ public class WorkspaceService {
     @Autowired
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
-            GeocodingService geocodingService,
             ResponseService responseService,
             LocationService locationService,
-            ClusterRepository clusterRepository
+            AddressService addressService,
+            ClusterService clusterService
     ) {
         this.workspaceRepository = workspaceRepository;
         this.responseService = responseService;
-        this.geocodingService = geocodingService;
         this.locationService = locationService;
-        this.clusterRepository = clusterRepository;
+        this.clusterService = clusterService;
+        this.addressService = addressService;
     }
 
     @Transactional(readOnly = true)
@@ -113,8 +115,6 @@ public class WorkspaceService {
         double clusterMaxLat;
         double clusterMinLong;
         double clusterMaxLong;
-        double averageClusterLat = 0;
-        double averageClusterLong = 0;
 
         Workspace w = Workspace.builder()
                 .name(workspace.getName())
@@ -125,77 +125,47 @@ public class WorkspaceService {
 
         for (double i = workspace.getMinLat() ; i < (workspace.getMaxLat()); i+= squareSize){
             for (double j = workspace.getMinLong() ; j < workspace.getMaxLong(); j+= squareSize){
-                ArrayList<Location> locations = new ArrayList<>();
 
                 clusterMinLat = i;
                 clusterMaxLat = (i + squareSize < workspace.getMaxLat() ? i + squareSize: workspace.getMaxLat());
                 clusterMinLong = j;
                 clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize: workspace.getMaxLat());
 
-                averageClusterLat = 0;
-                averageClusterLong = 0;
-
                 Cluster cluster = Cluster.builder()
-                        .latitude(averageClusterLat)
-                        .longitude(averageClusterLong)
+                        .latitude(0)
+                        .longitude(0)
                         .area("Temp")
-                        .locations(locations)
+                        .locations(new ArrayList<>())
                         .workspace(w)
                         .build();
 
                 for(CreateLocationDTO locationDTO : workspace.getLocations()){
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
                             && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)){
-                        Location location = Location.builder()
-                                .cluster(cluster)
-                                .latitude(locationDTO.getLatitude())
-                                .longitude(locationDTO.getLongitude())
-                                .tags(new ArrayList<Tag>())
-                                .build();
+                        if( cluster.getClusterId() == null) cluster = this.clusterService.createCluster(cluster);
 
-                        locations.add(location);
+                        Location location = this.locationService.createLocation(locationDTO, cluster.getClusterId());
 
-                        if(locationDTO.getTags() != null){
-                            for(String tag_name : locationDTO.getTags()){
-                                Tag tag = Tag.builder()
-                                        .name(tag_name)
-                                        .build();
-                                location.getTags().add(tag);
+                        cluster.getLocations().add(location);
 
-                            }
-                        }
-
-                        averageClusterLat += locationDTO.getLatitude();
-                        averageClusterLong += locationDTO.getLongitude();
+                        cluster.setLatitude(cluster.getLatitude() + locationDTO.getLatitude());
+                        cluster.setLongitude(cluster.getLongitude() + locationDTO.getLongitude());
                     }
                 }
 
-                if(locations.size() != 0){
-                    averageClusterLat = averageClusterLat / locations.size();
-                    averageClusterLong = averageClusterLong / locations.size();
+                if(cluster.getLocations().size() != 0){
+                    cluster.setLatitude(cluster.getLatitude() / cluster.getLocations().size());
+                    cluster.setLongitude(cluster.getLongitude() / cluster.getLocations().size());
 
-                    cluster.setLatitude(averageClusterLat);
-                    cluster.setLongitude(averageClusterLong);
+                    Address address = this.addressService.createAddress(cluster.getClusterId());
 
-                    String result = this.geocodingService.getDataFromCoordonate(averageClusterLat, averageClusterLong);
-
-                    Address address =  this.geocodingService.convertResponseStringToAddressObject(result,cluster);
-
-                    cluster.setArea(address.getArea());
-
-                    cluster = this.clusterRepository.save(cluster);
-
-                    for (Location location : cluster.getLocations()){
-                        location.setCluster(cluster);
-                        this.locationService.createLocation(location);
-                    }
+                    cluster.setArea(address.getCity() + ", " + address.getCountry());
 
                     w.getClusters().add(cluster);
                 }
 
             }
         }
-
         return w;
     }
 
