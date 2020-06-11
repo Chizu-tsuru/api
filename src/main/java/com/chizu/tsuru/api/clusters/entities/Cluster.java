@@ -2,6 +2,8 @@ package com.chizu.tsuru.api.clusters.entities;
 
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import lombok.*;
+import org.springframework.stereotype.Indexed;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Cluster implements Serializable {
 
     @NotNull
     private double longitude;
+
     @NotNull
     private double latitude;
 

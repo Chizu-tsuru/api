@@ -15,4 +15,8 @@ public class Configuration {
     @Value("${com.chizu.tsuru.api.geocoding.apiurl}")
     private String apiUrl;
 
+    @Getter
+    @Value("${com.chizu.tsuru.api.lucene.folder}")
+    private String luceneFolder;
+
 }
