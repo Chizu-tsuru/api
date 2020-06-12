@@ -85,7 +85,6 @@ public class GeocodingService {
                 .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))
                 .area(getAreaFromCoordinate(response))
                 .city(getCityFromCoordinate(response))
-                .cluster(cluster)
                 .country(getCountryFromCoordinate(response)).build();
     }
 }

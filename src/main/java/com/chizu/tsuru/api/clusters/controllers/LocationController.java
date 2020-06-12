@@ -15,10 +15,7 @@ public class LocationController {
     private final ResponseService responseService;
     private final LuceneService luceneService;
     private final Configuration configuration;
-
-    private int default_count;
-
-
+    private final int default_count;
 
     public LocationController(LocationService locationService,
                               ResponseService responseService,
@@ -29,7 +26,7 @@ public class LocationController {
         this.luceneService = luceneService;
         this.configuration = configuration;
 
-        default_count = configuration.getLuceneResultCount();
+        this.default_count = configuration.getLuceneResultCount();
     }
 
     @GetMapping("/{idLocation}")
@@ -38,29 +35,7 @@ public class LocationController {
                 .getLocationDTO(this.locationService.getLocation(idLocation));
     }
 
-    @GetMapping("/search/latitude")
-    public void GetLocationByLatitude(@RequestParam(value="query") String query,
-                          @RequestParam(value="count", required = false) String countStr) {
-
-        int count = default_count;
-        if(countStr != null) {
-            count = Math.min(Integer.parseInt(countStr), default_count);
-        }
-        luceneService.searchLocationByLatitude(query, count);
-    }
-
-    @GetMapping("/search/longitude")
-    public void GetLocationByLongitude(@RequestParam(value="query") String query,
-                          @RequestParam(value="count", required = false) String countStr) {
-
-        int count = default_count;
-        if(countStr != null) {
-            count = Math.min(Integer.parseInt(countStr), default_count);
-        }
-        luceneService.searchLocationByLongitude(query, count);
-    }
-
-    @GetMapping("/search/range")
+    @GetMapping("/search/custom")
     public void GetLocationByLongitude(@RequestParam(value="field") String field,
                                        @RequestParam(value="query") String query,
                                        @RequestParam(value="count", required = false) String countStr) {
@@ -70,7 +45,7 @@ public class LocationController {
             count = Math.min(Integer.parseInt(countStr), default_count);
         }
 
-        luceneService.searchLocationByRange(field, query, count);
+        luceneService.searchLocationWithCustom(field, query, count);
 
     }
 }

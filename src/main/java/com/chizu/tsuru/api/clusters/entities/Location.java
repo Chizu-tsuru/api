@@ -4,6 +4,7 @@ import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
 import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 @Data
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "locations")
-public class Location {
+public class Location{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

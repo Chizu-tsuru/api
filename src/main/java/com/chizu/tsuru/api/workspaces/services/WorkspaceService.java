@@ -135,6 +135,7 @@ public class WorkspaceService {
                         .latitude(0)
                         .longitude(0)
                         .area("Temp")
+                        .address(null)
                         .locations(new ArrayList<>())
                         .workspace(w)
                         .build();
@@ -157,8 +158,8 @@ public class WorkspaceService {
                     cluster.setLatitude(cluster.getLatitude() / cluster.getLocations().size());
                     cluster.setLongitude(cluster.getLongitude() / cluster.getLocations().size());
 
-                    Address address = this.addressService.createAddress(cluster.getClusterId());
-
+                    Address address = this.addressService.createAddress(cluster);
+                    cluster.setAddress(address);
                     cluster.setArea(address.getCity() + ", " + address.getCountry());
 
                     w.getClusters().add(cluster);

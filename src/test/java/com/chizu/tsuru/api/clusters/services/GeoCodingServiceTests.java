@@ -73,11 +73,4 @@ public class GeoCodingServiceTests {
         Address address = geocodingService.convertResponseStringToAddressObject(result, new Cluster());
         assertThat(address.getCountry()).isEqualTo("France");
     }
-
-    @Test
-    public void getAddressFromCoordinate_should_return_an_address_and_area_should_be_a_cluster_test() {
-        String result = geocodingService.getDataFromCoordinate(48.8, 2.5);
-        Address address = geocodingService.convertResponseStringToAddressObject(result, new Cluster());
-        assertThat(address.getCluster()).isInstanceOf(Cluster.class);
-    }
 }
