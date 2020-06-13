@@ -1,10 +1,11 @@
 package com.chizu.tsuru.api.clusters.services;
 
+import com.chizu.tsuru.api.clusters.dto.GetLocationLuceneDTO;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.config.Configuration;
-import com.sun.istack.Builder;
+import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -18,13 +19,12 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.MMapDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -64,15 +64,16 @@ public class LuceneService {
         }
     }
 
-    public void searchLocationWithCustom(String field, String query, int count){
+    public List<GetLocationLuceneDTO> searchLocationWithCustom(String field, String query, int count){
         try {
-            this.searchQuery(field, query, count);
+            return this.searchQuery(field, query, count);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
-    public void searchLocationWithMultipleValue(
+    public List<GetLocationLuceneDTO> searchLocationWithMultipleValue(
             String q_latitude,
             String q_longitude,
             String q_city,
@@ -83,18 +84,22 @@ public class LuceneService {
             String q_tags,
             int count){
         try {
-            this.SearchMultipleQuery(q_latitude, q_longitude, q_city, q_area, q_administrative_area_1, q_administrative_area_2, q_country, q_tags, count);
+            return this.SearchMultipleQuery(q_latitude, q_longitude, q_city, q_area, q_administrative_area_1, q_administrative_area_2, q_country, q_tags, count);
         } catch (ParseException | IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
-    private static void addDoc(IndexWriter w, Location location) throws IOException {
+    private void addDoc(IndexWriter w, Location location) throws IOException {
         Document doc = new Document();
         //Location
         doc.add(new StoredField("locationId", location.getLocationId()));
         doc.add(new TextField("latitude", location.getLatitude().toString(), Field.Store.YES));
         doc.add(new TextField("longitude", location.getLongitude().toString(), Field.Store.YES));
+
+        //Cluster
+        doc.add(new StoredField("clusterId", location.getCluster().getClusterId().toString()));
 
         // Address
         doc.add(new TextField("city", location.getCluster().getAddress().getCity(), Field.Store.YES));
@@ -113,12 +118,11 @@ public class LuceneService {
         w.addDocument(doc);
     }
 
-    @Transactional
-    public List<Location> getLocations(LocationRepository locationRepository){
+    private List<Location> getLocations(LocationRepository locationRepository){
         return locationRepository.findAll();
     }
 
-    public void searchQuery(String field, String query, int count) throws ParseException, IOException {
+    private List<GetLocationLuceneDTO> searchQuery(String field, String query, int count) throws ParseException, IOException {
         Query q = new QueryParser(field, analyzer).parse(query);
 
         IndexReader reader = DirectoryReader.open(index);
@@ -127,21 +131,30 @@ public class LuceneService {
         ScoreDoc[] hits = docs.scoreDocs;
 
         System.out.println("Found " + hits.length + " hits.");
-        for(int i=0;i<hits.length;++i) {
-            int docId = hits[i].doc;
-            Document d = searcher.doc(docId);
-            System.out.println((i + 1) + ". " +
-                    d.get("locationId") +
-                    "\t" + d.get("latitude")  +
-                    "\t" + d.get("longitude")  +
-                    "\t" + d.get("city")  +
-                    "\t" + d.get("area")  +
-                    "\t" + d.get("tags")
-            );
-        }
+        return parseAndReturnResponse(hits);
     }
 
-    public void SearchMultipleQuery(
+    private List<GetLocationLuceneDTO> parseAndReturnResponse(ScoreDoc[] hits) throws IOException {
+        List<GetLocationLuceneDTO> getLocationDTOList = new ArrayList<>();
+        IndexReader reader = DirectoryReader.open(index);
+        IndexSearcher searcher = new IndexSearcher(reader);
+        for (ScoreDoc hit : hits) {
+            int docId = hit.doc;
+            Document d = searcher.doc(docId);
+
+            getLocationDTOList.add(GetLocationLuceneDTO.builder()
+                    .locationId(Integer.parseInt(d.get("locationId")))
+                    .latitude(Double.parseDouble(d.get("latitude")))
+                    .longitude(Double.parseDouble(d.get("longitude")))
+                    .tags(Arrays.asList(d.get("tags").split(";")))
+                    .cluster(d.get("clusterId"))
+                    .build());
+        }
+
+        return getLocationDTOList;
+    }
+
+    private List<GetLocationLuceneDTO> SearchMultipleQuery(
             String q_latitude,
             String q_longitude,
             String q_city,
@@ -180,17 +193,6 @@ public class LuceneService {
         ScoreDoc[] hits = docs.scoreDocs;
 
         System.out.println("Found " + hits.length + " hits.");
-        for(int i=0;i<hits.length;++i) {
-            int docId = hits[i].doc;
-            Document d = searcher.doc(docId);
-            System.out.println((i + 1) + ". " +
-                    d.get("locationId") +
-                    "\t" + d.get("latitude")  +
-                    "\t" + d.get("longitude")  +
-                    "\t" + d.get("city")  +
-                    "\t" + d.get("area")  +
-                    "\t" + d.get("tags")
-            );
-        }
+        return parseAndReturnResponse(hits);
     }
 }

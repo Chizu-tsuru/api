@@ -1,11 +1,14 @@
 package com.chizu.tsuru.api.clusters.controllers;
 
 import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
+import com.chizu.tsuru.api.clusters.dto.GetLocationLuceneDTO;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.LuceneService;
 import com.chizu.tsuru.api.config.Configuration;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/locations")
@@ -36,18 +39,18 @@ public class LocationController {
     }
 
     @GetMapping("/search/custom")
-    public void GetLocationByLongitude(@RequestParam(value="field") String field,
+    public List<GetLocationLuceneDTO> GetLocationByLongitude(@RequestParam(value="field") String field,
                                        @RequestParam(value="query") String query,
                                        @RequestParam(value="count", required = false) String countStr) {
         int count = default_count;
         if(countStr != null) {
             count = Math.min(Integer.parseInt(countStr), default_count);
         }
-        luceneService.searchLocationWithCustom(field, query, count);
+        return luceneService.searchLocationWithCustom(field, query, count);
     }
 
     @GetMapping("/search/multiple")
-    public void GetLocationByMultipleValue(
+    public List<GetLocationLuceneDTO> GetLocationByMultipleValue(
             @RequestParam(value="q_latitude", required = false) String q_latitude,
 
             @RequestParam(value="q_longitude", required = false) String q_longitude,
@@ -71,6 +74,15 @@ public class LocationController {
             count = Math.min(Integer.parseInt(countStr), default_count);
         }
 
-        luceneService.searchLocationWithMultipleValue(q_latitude, q_longitude, q_city, q_area, q_administrative_area_1, q_administrative_area_2, q_country, q_tags, count);
+        return responseService.getLocationLuceneDTO(
+                luceneService.searchLocationWithMultipleValue(q_latitude,
+                        q_longitude,
+                        q_city,
+                        q_area,
+                        q_administrative_area_1,
+                        q_administrative_area_2,
+                        q_country,
+                        q_tags,
+                        count));
     }
 }

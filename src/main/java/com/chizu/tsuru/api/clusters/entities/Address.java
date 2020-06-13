@@ -11,7 +11,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "address")
-public class Address{
+public class Address implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

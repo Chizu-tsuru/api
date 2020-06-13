@@ -32,4 +32,9 @@ public class AddressService {
             return created;
     }
 
+    @Transactional(readOnly = true)
+    public Address getAddress(Integer addressId) {
+        return addressRepository.findById(addressId)
+                .orElseThrow(() -> new NotFoundException(addressId + ": this address has not been found"));
+    }
 }
