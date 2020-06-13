@@ -63,6 +63,15 @@ public class LocationService {
     }
 
     @Transactional(readOnly = true)
+    public List<GetLocationDTO> getLocationsByCluster(Integer clusterId) {
+        System.out.println("LUI + + + "+clusterId);
+        return  locationRepository.findAllByClusterId(clusterId)
+                .stream()
+                .map(this.responseService::getLocationDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
     public List<GetLocationDTO> getLocationsByWorkspace(Workspace workspace) {
         return  locationRepository.findAllByWorkspace(workspace)
                 .stream()

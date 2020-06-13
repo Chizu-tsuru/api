@@ -67,5 +67,4 @@ public class ResponseService {
                 .country(a.getCountry())
                 .build();
     }
-
 }
