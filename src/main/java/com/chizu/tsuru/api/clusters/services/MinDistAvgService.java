@@ -23,17 +23,17 @@ public class MinDistAvgService {
 
     public double anyClosestDist(@NotNull List<Location> locations) {
         List<Double> dist = new ArrayList<>();
-        double min, current;
+        double minDist, currentDist;
         for (int i = 0; i < locations.size(); i++) {
-            min = -1;
+            minDist = -1;
             for (int j = 0; j < locations.size(); j++) {
                 if (i != j) {
-                    current = this.mapService.getDistance(locations.get(i), locations.get(j));
-                    if (current < min || min == -1)
-                        min = current;
+                    currentDist = this.mapService.getDistance(locations.get(i), locations.get(j));
+                    if (currentDist < minDist || minDist == -1)
+                        minDist = currentDist;
                 }
             }
-            dist.add(min);
+            dist.add(minDist);
         }
         return dist
                 .stream()
