@@ -21,19 +21,19 @@ public class MinDistAvgService {
         this.mapService = mapService;
     }
 
-    public double anyClosestDist(@NotNull List<Location> p) {
+    public double anyClosestDist(@NotNull List<Location> locations) {
         List<Double> dist = new ArrayList<>();
-        double d, c;
-        for (int i = 0; i < p.size(); i++) {
-            d = -1;
-            for (int j = 0; j < p.size(); j++) {
+        double minDist, currentDist;
+        for (int i = 0; i < locations.size(); i++) {
+            minDist = -1;
+            for (int j = 0; j < locations.size(); j++) {
                 if (i != j) {
-                    c = this.mapService.getDistance(p.get(i), p.get(j));
-                    if (c < d || d == -1)
-                        d = c;
+                    currentDist = this.mapService.getDistance(locations.get(i), locations.get(j));
+                    if (currentDist < minDist || minDist == -1)
+                        minDist = currentDist;
                 }
             }
-            dist.add(d);
+            dist.add(minDist);
         }
         return dist
                 .stream()
@@ -48,28 +48,28 @@ public class MinDistAvgService {
                     .numberLocations(locations.size())
                     .build();
         }
-        List<Local> p = locationToLocal(locations);
+        List<Local> locals = locationToLocal(locations);
 
-        List<Edge> allEdges = new ArrayList<>();
-        for (int i = 0; i < p.size(); i++) {
-            for (int j = i + 1; j < p.size(); j++) {
-                allEdges.add(new Edge(p.get(i), p.get(j)));
+        List<Edge> edges = new ArrayList<>();
+        for (int i = 0; i < locals.size(); i++) {
+            for (int j = i + 1; j < locals.size(); j++) {
+                edges.add(new Edge(locals.get(i), locals.get(j)));
             }
         }
-        allEdges.sort(Comparator.comparingDouble(Edge::getWeight)); // Sort list by weight
+        edges.sort(Comparator.comparingDouble(Edge::getWeight)); // Sort list by weight
 
         // Kruskal algorithm
         List<Edge> graph = new ArrayList<>();
         int i = 0;
-        while (graph.size() < p.size() - 1) {
-            Edge edge = allEdges.get(i++);
-            int id1 = edge.u.clusterId;
-            int id2 = edge.v.clusterId;
+        while (graph.size() < locals.size() - 1) {
+            Edge edge = edges.get(i++);
+            int id1 = edge.l1.clusterId;
+            int id2 = edge.l2.clusterId;
             if (id1 != id2) {
                 graph.add(edge);
-                for (Local l : p)
-                    if (l.clusterId == id2) {
-                        l.clusterId = id1;
+                for (Local local : locals)
+                    if (local.clusterId == id2) {
+                        local.clusterId = id1;
                     }
             }
         }
@@ -79,10 +79,10 @@ public class MinDistAvgService {
                 .build();
     }
 
-    private double kruskalToDist(List<Edge> p) {
+    private double kruskalToDist(List<Edge> edges) {
         List<Double> res = new ArrayList<>();
-        for (Edge e : p) {
-            res.add(this.mapService.getDistance(e.u.toLocation(), e.v.toLocation()));
+        for (Edge edge : edges) {
+            res.add(this.mapService.getDistance(edge.l1.toLocation(), edge.l2.toLocation()));
         }
         return res
                 .stream()
@@ -90,18 +90,18 @@ public class MinDistAvgService {
                 / res.size();
     }
 
-    private List<Local> locationToLocal(List<Location> l) {
-        List<Local> p = new ArrayList<>();
-        for (Location i : l)
-            p.add(new Local(i.getLongitude(), i.getLatitude()));
-        return p;
+    private List<Local> locationToLocal(List<Location> locations) {
+        List<Local> locals = new ArrayList<>();
+        for (Location location : locations)
+            locals.add(new Local(location.getLongitude(), location.getLatitude()));
+        return locals;
     }
 
     static class Local {
         static int nex_id = 0;
         int clusterId = nex_id++;
-        private Double latitude;
-        private Double longitude;
+        private final Double latitude;
+        private final Double longitude;
 
         Local(double Longitude, double Latitude) {
             this.longitude = Longitude;
@@ -123,15 +123,15 @@ public class MinDistAvgService {
 
     static class Edge {
 
-        private final Local u;
+        private final Local l1;
 
-        private final Local v;
+        private final Local l2;
 
         private final double weight;
 
         Edge(Local l1, Local l2) {
-            this.u = l1;
-            this.v = l2;
+            this.l1 = l1;
+            this.l2 = l2;
             this.weight = Math.hypot(Math.abs(l1.getLongitude() - l2.getLongitude()), Math.abs(l1.getLatitude() - l2.getLatitude()));
         }
 

@@ -9,6 +9,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,7 +28,7 @@ public class AddressServiceTests {
     private static AddressService addressService;
 
     @BeforeClass
-    public static void setup(){
+    public static void setup() {
         addressRepository = mock(AddressRepository.class);
         clusterRepository = mock(ClusterRepository.class);
         geocodingService = mock(GeocodingService.class);
@@ -55,7 +56,7 @@ public class AddressServiceTests {
     }
 
     @Test
-    public void createAddress_should_return_1_test(){
+    public void createAddress_should_return_1_test() {
         assertThat(addressService.createAddress(1).getAddressId()).isEqualTo(1);
     }
 }

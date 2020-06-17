@@ -1,24 +1,18 @@
 package com.chizu.tsuru.api.workspaces.controllers;
 
+import com.chizu.tsuru.api.shared.exceptions.BadRequestException;
 import com.chizu.tsuru.api.shared.services.ResponseService;
-import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
+import com.chizu.tsuru.api.shared.services.URIService;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
-import com.chizu.tsuru.api.clusters.entities.Cluster;
-import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
-import com.chizu.tsuru.api.shared.exceptions.BadRequestException;
-import com.chizu.tsuru.api.shared.services.URIService;
 import com.chizu.tsuru.api.workspaces.services.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -64,8 +58,6 @@ public class WorkspaceController {
         return this.responseService
                 .getWorkspaceDTO(this.workspaceService.getWorkspace(idWorkspace));
     }
-
-
 
 
 }

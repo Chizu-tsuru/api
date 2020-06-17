@@ -56,7 +56,7 @@ public class LocationService {
 
     @Transactional(readOnly = true)
     public List<GetLocationDTO> getLocationsByCluster(Cluster cluster) {
-        return  locationRepository.findAllByCluster(cluster)
+        return locationRepository.findAllByCluster(cluster)
                 .stream()
                 .map(this.responseService::getLocationDTO)
                 .collect(Collectors.toList());
@@ -64,14 +64,14 @@ public class LocationService {
 
     @Transactional(readOnly = true)
     public List<GetLocationDTO> getLocationsByWorkspace(Workspace workspace) {
-        return  locationRepository.findAllByWorkspace(workspace)
+        return locationRepository.findAllByWorkspace(workspace)
                 .stream()
                 .map(this.responseService::getLocationDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public Location createLocation(CreateLocationDTO createLocationDTO,Integer clusterId) {
+    public Location createLocation(CreateLocationDTO createLocationDTO, Integer clusterId) {
         Cluster c = clusterRepository.findById(clusterId).orElseThrow(() -> new NotFoundException("Cluster not found"));
         Location location = Location.builder()
                 .cluster(c)
@@ -80,8 +80,8 @@ public class LocationService {
                 .tags(new ArrayList<Tag>())
                 .build();
 
-        if( createLocationDTO.getTags() != null ){
-            for( String tag :createLocationDTO.getTags()){
+        if (createLocationDTO.getTags() != null) {
+            for (String tag : createLocationDTO.getTags()) {
                 Tag t = Tag.builder()
                         .name(tag)
                         .build();
@@ -90,7 +90,7 @@ public class LocationService {
         }
 
         Location created = locationRepository.save(location);
-        for(Tag t: location.getTags()){
+        for (Tag t : location.getTags()) {
             tagRepository.save(t);
         }
         return created;

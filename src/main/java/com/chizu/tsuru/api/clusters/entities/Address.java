@@ -1,6 +1,7 @@
 package com.chizu.tsuru.api.clusters.entities;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 

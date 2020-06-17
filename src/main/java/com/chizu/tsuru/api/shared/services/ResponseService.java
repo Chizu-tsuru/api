@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class ResponseService {
 
     private final URIService uriService;
+
     public ResponseService(URIService uriService) {
         this.uriService = uriService;
     }

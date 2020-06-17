@@ -39,13 +39,13 @@ public class LocationServiceTests {
 
 
     @BeforeClass
-    public static void setup(){
+    public static void setup() {
         locationRepository = mock(LocationRepository.class);
         responseService = mock(ResponseService.class);
         clusterRepository = mock(ClusterRepository.class);
         tagRepository = mock(TagRepository.class);
 
-        locationService = new LocationService(locationRepository, responseService, clusterRepository,tagRepository);
+        locationService = new LocationService(locationRepository, responseService, clusterRepository, tagRepository);
 
         cluster = Cluster.builder()
                 .latitude(2.18)
@@ -75,7 +75,7 @@ public class LocationServiceTests {
     }
 
     @Test
-    public void createLocation_should_return_3_test(){
+    public void createLocation_should_return_3_test() {
         CreateLocationDTO createLocationDTO = new CreateLocationDTO();
         createLocationDTO.setLatitude(location.getLatitude());
         createLocationDTO.setLongitude(location.getLongitude());

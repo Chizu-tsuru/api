@@ -32,7 +32,7 @@ public class TravelService {
         return findPath(cluster, reference);
     }
 
-    public  GetTravelDTO findPath(Cluster cluster, Location reference) {
+    public GetTravelDTO findPath(Cluster cluster, Location reference) {
         List<Location> locations = new ArrayList<>();
         double distanceTotal = 0;
 

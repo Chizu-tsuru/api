@@ -3,15 +3,13 @@ package com.chizu.tsuru.api.workspaces.services;
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
-import com.chizu.tsuru.api.clusters.entities.Tag;
-import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.services.AddressService;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
-import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
-import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
+import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import com.chizu.tsuru.api.workspaces.repositories.WorkspaceRepository;
@@ -22,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -77,22 +74,22 @@ public class WorkspaceService {
     public double getGridSquareSize(double latDiff, double longDiff) {
         double magnitude = Math.log10(Math.max(latDiff, longDiff));
 
-        return Math.pow(10,((int) Math.round(magnitude) )- 1);
+        return Math.pow(10, ((int) Math.round(magnitude)) - 1);
     }
 
-    public double coordinatesRound(double coordinates){
+    public double coordinatesRound(double coordinates) {
         return (double) Math.round(coordinates * 100000d) / 100000d;
     }
 
-    public double getAbsDiff(double min, double max, int side){
+    public double getAbsDiff(double min, double max, int side) {
 
-        switch(side){
+        switch (side) {
             case LATITUDE:
                 return Math.abs(min - max);
 
             case LONGITUDE:
                 if (min > max) {
-                    return 360 - (min  - max);
+                    return 360 - (min - max);
                 } else {
                     return max - min;
                 }
@@ -102,7 +99,7 @@ public class WorkspaceService {
         }
     }
 
-    public double getSquareSize(CreateWorkspaceDTO workspace){
+    public double getSquareSize(CreateWorkspaceDTO workspace) {
         double latDiff = coordinatesRound(getAbsDiff(workspace.getMinLat(), workspace.getMaxLat(), LATITUDE));
         double longDiff = coordinatesRound(getAbsDiff(workspace.getMinLong(), workspace.getMaxLong(), LONGITUDE));
 
@@ -123,13 +120,13 @@ public class WorkspaceService {
 
         squareSize = this.getSquareSize(workspace);
 
-        for (double i = workspace.getMinLat() ; i < (workspace.getMaxLat()); i+= squareSize){
-            for (double j = workspace.getMinLong() ; j < workspace.getMaxLong(); j+= squareSize){
+        for (double i = workspace.getMinLat(); i < (workspace.getMaxLat()); i += squareSize) {
+            for (double j = workspace.getMinLong(); j < workspace.getMaxLong(); j += squareSize) {
 
                 clusterMinLat = i;
-                clusterMaxLat = (i + squareSize < workspace.getMaxLat() ? i + squareSize: workspace.getMaxLat());
+                clusterMaxLat = (i + squareSize < workspace.getMaxLat() ? i + squareSize : workspace.getMaxLat());
                 clusterMinLong = j;
-                clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize: workspace.getMaxLat());
+                clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize : workspace.getMaxLat());
 
                 Cluster cluster = Cluster.builder()
                         .latitude(0)
@@ -139,10 +136,10 @@ public class WorkspaceService {
                         .workspace(w)
                         .build();
 
-                for(CreateLocationDTO locationDTO : workspace.getLocations()){
+                for (CreateLocationDTO locationDTO : workspace.getLocations()) {
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
-                            && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)){
-                        if( cluster.getClusterId() == null) cluster = this.clusterService.createCluster(cluster);
+                            && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)) {
+                        if (cluster.getClusterId() == null) cluster = this.clusterService.createCluster(cluster);
 
                         Location location = this.locationService.createLocation(locationDTO, cluster.getClusterId());
 
@@ -153,7 +150,7 @@ public class WorkspaceService {
                     }
                 }
 
-                if(cluster.getLocations().size() != 0){
+                if (cluster.getLocations().size() != 0) {
                     cluster.setLatitude(cluster.getLatitude() / cluster.getLocations().size());
                     cluster.setLongitude(cluster.getLongitude() / cluster.getLocations().size());
 
@@ -169,7 +166,7 @@ public class WorkspaceService {
         return w;
     }
 
-    private boolean between(double value, double min, double max){
+    private boolean between(double value, double min, double max) {
         return value >= min && value < max;
     }
 }
