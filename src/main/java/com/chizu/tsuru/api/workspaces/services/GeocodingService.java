@@ -39,7 +39,7 @@ public class GeocodingService {
         return null;
     }
 
-    private String getRequest(HttpGet request){
+    private String getRequest(HttpGet request) {
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             HttpEntity entity = response.getEntity();
 
@@ -53,33 +53,33 @@ public class GeocodingService {
         return null;
     }
 
-    private String getCityFromCoordinate(String jsonResponse){
+    private String getCityFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate(2, jsonResponse);
     }
 
-    private String getAdministrativeAreaLevel2FromCoordinate(String jsonResponse){
+    private String getAdministrativeAreaLevel2FromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate(3, jsonResponse);
     }
 
-    private String getAdministrativeAreaLevel1FromCoordinate(String jsonResponse){
+    private String getAdministrativeAreaLevel1FromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate(4, jsonResponse);
     }
 
-    private String getCountryFromCoordinate(String jsonResponse){
+    private String getCountryFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate(5, jsonResponse);
     }
 
-    private String getAreaFromCoordinate(String jsonResponse){
+    private String getAreaFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate(6, jsonResponse);
     }
 
-    public String getDataFromCoordinate(double latitude, double longitude){
+    public String getDataFromCoordinate(double latitude, double longitude) {
         HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
                 + longitude + "&key=" + this.configuration.getApiKey());
         return getRequest(request);
     }
 
-    public Address convertResponseStringToAddressObject(String response, Cluster cluster){
+    public Address convertResponseStringToAddressObject(String response, Cluster cluster) {
         return Address.builder()
                 .administrative_area_1(getAdministrativeAreaLevel1FromCoordinate(response))
                 .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))

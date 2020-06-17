@@ -18,7 +18,8 @@ public class LocationController {
     public LocationController(LocationService locationService,
                               ResponseService responseService) {
         this.locationService = locationService;
-        this.responseService = responseService; }
+        this.responseService = responseService;
+    }
 
     @GetMapping("/{idLocation}")
     public GetLocationDTO getLocation(@PathVariable("idLocation") Integer idLocation) {

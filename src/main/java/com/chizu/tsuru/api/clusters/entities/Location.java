@@ -2,6 +2,7 @@ package com.chizu.tsuru.api.clusters.entities;
 
 import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -24,12 +25,14 @@ public class Location {
     @NotNull
     private Double longitude;
 
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "cluster_id")
     private Cluster cluster;
 
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "location_tag",
             joinColumns = @JoinColumn(name = "location_id"),

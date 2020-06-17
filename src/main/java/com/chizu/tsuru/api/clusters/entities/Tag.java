@@ -1,6 +1,7 @@
 package com.chizu.tsuru.api.clusters.entities;
 
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -20,7 +21,8 @@ public class Tag {
     @NotNull
     private String name;
 
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tags")
     private List<Location> locations;
 }

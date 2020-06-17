@@ -2,6 +2,7 @@ package com.chizu.tsuru.api.clusters.entities;
 
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -26,8 +27,9 @@ public class Cluster implements Serializable {
 
     private String area;
 
-    @ToString.Exclude @EqualsAndHashCode.Exclude
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL  )
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "workspace_id")
     private Workspace workspace;
 

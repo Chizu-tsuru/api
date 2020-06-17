@@ -22,7 +22,7 @@ public class StatService {
 
     public Page<Stat> getStats(int page, int limit, String sortedColumn, String sortedDirection) {
         Sort sort;
-        if( sortedDirection.equals("asc")) {
+        if (sortedDirection.equals("asc")) {
             sort = Sort.by(sortedColumn).ascending();
         } else {
             sort = Sort.by(sortedColumn).descending();
