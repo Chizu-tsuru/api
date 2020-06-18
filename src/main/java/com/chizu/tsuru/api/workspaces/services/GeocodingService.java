@@ -73,13 +73,13 @@ public class GeocodingService {
         return extractDataFromCoordinate(6, jsonResponse);
     }
 
-    public String getDataFromCoordinate(double latitude, double longitude) {
+    private String getDataFromCoordinate(double latitude, double longitude) {
         HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
                 + longitude + "&key=" + this.configuration.getApiKey());
         return getRequest(request);
     }
 
-    public Address convertResponseStringToAddressObject(String response, Cluster cluster) {
+    private Address convertResponseStringToAddressObject(String response, Cluster cluster) {
         return Address.builder()
                 .administrative_area_1(getAdministrativeAreaLevel1FromCoordinate(response))
                 .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))
@@ -87,5 +87,12 @@ public class GeocodingService {
                 .city(getCityFromCoordinate(response))
                 .cluster(cluster)
                 .country(getCountryFromCoordinate(response)).build();
+    }
+
+    public Address ClusterToAddress(Cluster cluster){
+        String response = this.getDataFromCoordinate(cluster.getLatitude(), cluster.getLongitude());
+        Address address = this.convertResponseStringToAddressObject(response, cluster);
+
+        return address;
     }
 }

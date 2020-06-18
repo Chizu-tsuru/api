@@ -29,14 +29,12 @@ public class AddressService {
     @Transactional
     public Address createAddress(int cluster_id) {
 
-        Cluster c = clusterRepository.findById(cluster_id).orElseThrow(() -> new NotFoundException("Cluster not found"));
+        Cluster cluster = clusterRepository.findById(cluster_id).orElseThrow(() -> new NotFoundException("Cluster not found"));
 
-        if (!doesTheAddressAlreadyExist(c)) {
-            String response = geocodingService.getDataFromCoordinate(c.getLatitude(), c.getLongitude());
-            Address address = geocodingService.convertResponseStringToAddressObject(response, c);
+        if (!doesTheAddressAlreadyExist(cluster)) {
+            Address address = geocodingService.ClusterToAddress(cluster);
 
-            Address created = addressRepository.save(address);
-            return created;
+            return addressRepository.save(address);
         }
         return null;
     }

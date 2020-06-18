@@ -72,26 +72,26 @@ public class LocationService {
 
     @Transactional
     public Location createLocation(CreateLocationDTO createLocationDTO, Integer clusterId) {
-        Cluster c = clusterRepository.findById(clusterId).orElseThrow(() -> new NotFoundException("Cluster not found"));
+        Cluster cluster = clusterRepository.findById(clusterId).orElseThrow(() -> new NotFoundException("Cluster not found"));
         Location location = Location.builder()
-                .cluster(c)
+                .cluster(cluster)
                 .latitude(createLocationDTO.getLatitude())
                 .longitude(createLocationDTO.getLongitude())
                 .tags(new ArrayList<Tag>())
                 .build();
 
         if (createLocationDTO.getTags() != null) {
-            for (String tag : createLocationDTO.getTags()) {
-                Tag t = Tag.builder()
-                        .name(tag)
+            for (String tagString : createLocationDTO.getTags()) {
+                Tag tag = Tag.builder()
+                        .name(tagString)
                         .build();
-                location.getTags().add(t);
+                location.getTags().add(tag);
             }
         }
 
         Location created = locationRepository.save(location);
-        for (Tag t : location.getTags()) {
-            tagRepository.save(t);
+        for (Tag tag : location.getTags()) {
+            tagRepository.save(tag);
         }
         return created;
     }
