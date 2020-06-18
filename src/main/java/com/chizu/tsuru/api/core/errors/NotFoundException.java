@@ -1,4 +1,4 @@
-package com.chizu.tsuru.api.shared.exceptions;
+package com.chizu.tsuru.api.core.errors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

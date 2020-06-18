@@ -7,6 +7,8 @@ import com.chizu.tsuru.api.shared.services.URIService;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
+import com.chizu.tsuru.api.core.errors.BadRequestException;
+import com.chizu.tsuru.api.shared.services.URIService;
 import com.chizu.tsuru.api.workspaces.services.WorkspaceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

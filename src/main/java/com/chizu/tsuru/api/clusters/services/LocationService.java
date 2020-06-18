@@ -7,7 +7,7 @@ import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
-import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
+import com.chizu.tsuru.api.core.errors.NotFoundException;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
