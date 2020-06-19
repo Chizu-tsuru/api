@@ -3,7 +3,7 @@ package com.chizu.tsuru.api.clusters.services;
 import com.chizu.tsuru.api.clusters.dto.GetTravelDTO;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
-import com.chizu.tsuru.api.shared.services.MapService;
+import com.chizu.tsuru.api.core.services.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

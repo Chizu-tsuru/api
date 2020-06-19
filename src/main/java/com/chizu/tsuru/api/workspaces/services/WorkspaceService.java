@@ -83,7 +83,7 @@ public class WorkspaceService {
     @Transactional
     public Integer createWorkspace(@Validated Workspace w) {
         Workspace created = workspaceRepository.save(w);
-        return created.getWorkspace_id();
+        return created.getWorkspaceId();
     }
 
     public double getGridSquareSize(double latDiff, double longDiff) {

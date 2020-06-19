@@ -18,7 +18,7 @@ public class Workspace implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer workspace_id;
+    private Integer workspaceId;
 
     @NotNull
     private String name;

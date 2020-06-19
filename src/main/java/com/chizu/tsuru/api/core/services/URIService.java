@@ -1,4 +1,4 @@
-package com.chizu.tsuru.api.shared.services;
+package com.chizu.tsuru.api.core.services;
 
 import lombok.Data;
 import org.springframework.stereotype.Service;

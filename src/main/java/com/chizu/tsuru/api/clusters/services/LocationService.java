@@ -8,7 +8,7 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
 import com.chizu.tsuru.api.core.errors.NotFoundException;
-import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.core.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import org.apache.http.client.methods.CloseableHttpResponse;

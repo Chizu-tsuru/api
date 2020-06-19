@@ -1,4 +1,4 @@
-package com.chizu.tsuru.api.config;
+package com.chizu.tsuru.api.core.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

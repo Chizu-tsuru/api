@@ -8,7 +8,7 @@ import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.MinDistAvgService;
 import com.chizu.tsuru.api.clusters.services.TravelService;
-import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.core.services.ResponseService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

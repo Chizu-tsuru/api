@@ -1,4 +1,4 @@
-package com.chizu.tsuru.api.shared.services;
+package com.chizu.tsuru.api.core.services;
 
 import com.chizu.tsuru.api.clusters.dto.GetAddressDTO;
 import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
@@ -27,7 +27,7 @@ public class ResponseService {
     public GetWorkspaceDTO getWorkspaceDTO(Workspace w) {
         return GetWorkspaceDTO.builder()
                 .name(w.getName())
-                .clusters(this.uriService.getClusters(w.getWorkspace_id()).toString())
+                .clusters(this.uriService.getClusters(w.getWorkspaceId()).toString())
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class ResponseService {
                 .longitude(c.getLongitude())
                 .address(this.uriService.getAddress(c.getAddress().getAddressId()).toString())
                 .locations(this.uriService.getLocations(c.getClusterId()).toString())
-                .workspace(this.uriService.getWorkspace(c.getWorkspace().getWorkspace_id()).toString())
+                .workspace(this.uriService.getWorkspace(c.getWorkspace().getWorkspaceId()).toString())
                 .build();
     }
 

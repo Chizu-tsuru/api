@@ -1,4 +1,4 @@
-package com.chizu.tsuru.api.shared.services;
+package com.chizu.tsuru.api.core.services;
 
 import com.chizu.tsuru.api.clusters.entities.Location;
 import org.springframework.stereotype.Service;

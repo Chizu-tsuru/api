@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.config;
 
+import com.chizu.tsuru.api.core.config.Configuration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
