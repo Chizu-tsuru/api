@@ -34,7 +34,6 @@ public class StatController {
 
     @PostMapping
     public GetStatDTO createStat(@Valid @RequestBody CreateStatDTO statDTO) {
-        System.out.println(statDTO);
         return this.statDTOService.toResponse(this.statService.createStat(statDTO));
     }
 }

@@ -51,7 +51,6 @@ public class ResponseService {
 
     public List<GetLocationLuceneDTO> getLocationLuceneDTO(List<GetLocationLuceneDTO> getLocationDTOList){
         for(GetLocationLuceneDTO item : getLocationDTOList){
-            System.out.println(item.getCluster());
             item.setCluster(this.uriService.getCluster(Integer.parseInt(item.getCluster())).toString());
         }
         return getLocationDTOList;

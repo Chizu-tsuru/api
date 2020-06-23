@@ -130,7 +130,6 @@ public class LuceneService {
         TopDocs docs = searcher.search(q,count);
         ScoreDoc[] hits = docs.scoreDocs;
 
-        System.out.println("Found " + hits.length + " hits.");
         return parseAndReturnResponse(hits);
     }
 
@@ -141,7 +140,6 @@ public class LuceneService {
         for (ScoreDoc hit : hits) {
             int docId = hit.doc;
             Document d = searcher.doc(docId);
-            System.out.println(d);
 
             getLocationDTOList.add(GetLocationLuceneDTO.builder()
                     .locationId(Integer.parseInt(d.get("locationId")))
@@ -186,14 +184,11 @@ public class LuceneService {
 
         BooleanQuery bq = booleanQuerryBuilder.build();
 
-        System.out.println(bq.toString());
-
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(bq,count);
         ScoreDoc[] hits = docs.scoreDocs;
 
-        System.out.println("Found " + hits.length + " hits.");
         return parseAndReturnResponse(hits);
     }
 }

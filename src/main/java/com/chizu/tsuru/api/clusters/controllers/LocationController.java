@@ -8,6 +8,9 @@ import com.chizu.tsuru.api.config.Configuration;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -67,14 +70,24 @@ public class LocationController {
 
             @RequestParam(value="tags", required = false) String q_tags,
 
-            @RequestParam(value="count", required = false) String countStr) {
+            @RequestParam(value="count", required = false) String count_str,
+
+            HttpServletRequest request) {
 
         int count = default_count;
-        if(countStr != null) {
-            count = Math.min(Integer.parseInt(countStr), default_count);
+        if(count_str != null) {
+            count = Math.min(Integer.parseInt(count_str), default_count);
         }
+        long startTime = System.currentTimeMillis();
 
-        return responseService.getLocationLuceneDTO(
+        String requestIp = request.getRemoteAddr();
+        String requestUrl = request.getRequestURL().toString();
+        String requestParam = request.getQueryString();
+        String fullRequest = requestUrl + "?" + requestParam;
+
+        Date date = new Date();
+
+        List<GetLocationLuceneDTO> response = responseService.getLocationLuceneDTO(
                 luceneService.searchLocationWithMultipleValue(q_latitude,
                         q_longitude,
                         q_city,
@@ -84,5 +97,12 @@ public class LocationController {
                         q_country,
                         q_tags,
                         count));
+
+        long endTime = System.currentTimeMillis();
+        double executionTime = endTime - startTime;
+
+        this.locationService.saveRequest(requestIp, date, executionTime, response.size(), fullRequest);
+
+        return response;
     }
 }
