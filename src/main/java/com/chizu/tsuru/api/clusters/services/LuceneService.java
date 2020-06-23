@@ -5,7 +5,6 @@ import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.config.Configuration;
-import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.*;
 import org.apache.lucene.index.DirectoryReader;
@@ -52,12 +51,13 @@ public class LuceneService {
 
             IndexWriter w = new IndexWriter(index, config);
 
+            w.deleteAll();
+
             List<Location> locationList = getLocations(this.locationRepository);
 
             for(Location location : locationList){
                 addDoc(w, location);
             }
-
             w.close();
         }catch (IOException  e) {
             e.printStackTrace();
@@ -141,6 +141,7 @@ public class LuceneService {
         for (ScoreDoc hit : hits) {
             int docId = hit.doc;
             Document d = searcher.doc(docId);
+            System.out.println(d);
 
             getLocationDTOList.add(GetLocationLuceneDTO.builder()
                     .locationId(Integer.parseInt(d.get("locationId")))

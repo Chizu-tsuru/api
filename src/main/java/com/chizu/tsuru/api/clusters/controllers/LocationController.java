@@ -51,21 +51,21 @@ public class LocationController {
 
     @GetMapping("/search/multiple")
     public List<GetLocationLuceneDTO> GetLocationByMultipleValue(
-            @RequestParam(value="q_latitude", required = false) String q_latitude,
+            @RequestParam(value="latitude", required = false) String q_latitude,
 
-            @RequestParam(value="q_longitude", required = false) String q_longitude,
+            @RequestParam(value="longitude", required = false) String q_longitude,
 
-            @RequestParam(value="q_city", required = false) String q_city,
+            @RequestParam(value="city", required = false) String q_city,
 
-            @RequestParam(value="q_area", required = false) String q_area,
+            @RequestParam(value="area", required = false) String q_area,
 
-            @RequestParam(value="q_administrative_area_1", required = false) String q_administrative_area_1,
+            @RequestParam(value="administrative_area_1", required = false) String q_administrative_area_1,
 
-            @RequestParam(value="q_administrative_area_2", required = false) String q_administrative_area_2,
+            @RequestParam(value="administrative_area_2", required = false) String q_administrative_area_2,
 
-            @RequestParam(value="q_country", required = false) String q_country,
+            @RequestParam(value="country", required = false) String q_country,
 
-            @RequestParam(value="q_tags", required = false) String q_tags,
+            @RequestParam(value="tags", required = false) String q_tags,
 
             @RequestParam(value="count", required = false) String countStr) {
 
