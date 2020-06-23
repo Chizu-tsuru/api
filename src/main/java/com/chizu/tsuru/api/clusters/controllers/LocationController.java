@@ -44,12 +44,29 @@ public class LocationController {
     @GetMapping("/search/custom")
     public List<GetLocationLuceneDTO> GetLocationByLongitude(@RequestParam(value="field") String field,
                                        @RequestParam(value="query") String query,
-                                       @RequestParam(value="count", required = false) String countStr) {
+                                       @RequestParam(value="count", required = false) String countStr,
+                                                             HttpServletRequest request) {
         int count = default_count;
         if(countStr != null) {
             count = Math.min(Integer.parseInt(countStr), default_count);
         }
-        return luceneService.searchLocationWithCustom(field, query, count);
+        long startTime = System.currentTimeMillis();
+
+        String requestIp = request.getRemoteAddr();
+        String requestUrl = request.getRequestURL().toString();
+        String requestParam = request.getQueryString();
+        String fullRequest = requestUrl + "?" + requestParam;
+
+        Date date = new Date();
+
+        List<GetLocationLuceneDTO> response =  luceneService.searchLocationWithCustom(field, query, count);
+
+        long endTime = System.currentTimeMillis();
+        double executionTime = endTime - startTime;
+
+        this.locationService.saveRequest(requestIp, date, executionTime, response.size(), fullRequest);
+
+        return response;
     }
 
     @GetMapping("/search/multiple")
