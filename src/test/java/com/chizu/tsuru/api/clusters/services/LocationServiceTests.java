@@ -6,7 +6,7 @@ import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
-import com.chizu.tsuru.api.core.services.ResponseService;
+import com.chizu.tsuru.api.core.services.ResponseOldService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 public class LocationServiceTests {
 
     private static LocationRepository locationRepository;
-    private static ResponseService responseService;
+    private static ResponseOldService responseService;
     private static ClusterRepository clusterRepository;
     private static TagRepository tagRepository;
 
@@ -41,7 +41,7 @@ public class LocationServiceTests {
     @BeforeClass
     public static void setup() {
         locationRepository = mock(LocationRepository.class);
-        responseService = mock(ResponseService.class);
+        responseService = mock(ResponseOldService.class);
         clusterRepository = mock(ClusterRepository.class);
         tagRepository = mock(TagRepository.class);
 

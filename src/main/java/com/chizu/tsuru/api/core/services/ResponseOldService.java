@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ResponseService {
+public class ResponseOldService {
 
     private final URIService uriService;
 
-    public ResponseService(URIService uriService) {
+    public ResponseOldService(URIService uriService) {
         this.uriService = uriService;
     }
 

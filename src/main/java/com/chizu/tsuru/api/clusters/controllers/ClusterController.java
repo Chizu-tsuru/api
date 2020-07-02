@@ -8,7 +8,7 @@ import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.MinDistAvgService;
 import com.chizu.tsuru.api.clusters.services.TravelService;
-import com.chizu.tsuru.api.core.services.ResponseService;
+import com.chizu.tsuru.api.core.services.ResponseOldService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/clusters")
 public class ClusterController {
 
-    private final ResponseService responseService;
+    private final ResponseOldService responseService;
     private final ClusterService clusterService;
     private final LocationService locationService;
     private final TravelService travelService;

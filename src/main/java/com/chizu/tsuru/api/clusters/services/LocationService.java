@@ -8,7 +8,7 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
 import com.chizu.tsuru.api.core.errors.NotFoundException;
-import com.chizu.tsuru.api.core.services.ResponseService;
+import com.chizu.tsuru.api.core.services.ResponseOldService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.entities.Workspace;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -33,14 +33,14 @@ import java.util.stream.Collectors;
 @Service
 public class LocationService {
     private final LocationRepository locationRepository;
-    private final ResponseService responseService;
+    private final ResponseOldService responseService;
     private final ClusterRepository clusterRepository;
     private final TagRepository tagRepository;
 
 
     @Autowired
     public LocationService(LocationRepository locationRepository,
-                           ResponseService responseService,
+                           ResponseOldService responseService,
                            ClusterRepository clusterRepository,
                            TagRepository tagRepository) {
         this.locationRepository = locationRepository;

@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetWorkspaceDTO {
-
     public String name;
     public String clusters;
-
 }
