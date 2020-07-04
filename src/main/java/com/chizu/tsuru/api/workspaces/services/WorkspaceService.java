@@ -3,11 +3,10 @@ package com.chizu.tsuru.api.workspaces.services;
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
-import com.chizu.tsuru.api.clusters.entities.Tag;
-import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.services.AddressService;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
+import com.chizu.tsuru.api.clusters.services.LuceneService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
@@ -20,9 +19,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,6 +32,7 @@ public class WorkspaceService {
     private final LocationService locationService;
     private final ClusterService clusterService;
     private final AddressService addressService;
+    private final LuceneService luceneService;
 
     public final int LATITUDE = 0;
     public final int LONGITUDE = 1;
@@ -43,13 +43,14 @@ public class WorkspaceService {
             ResponseService responseService,
             LocationService locationService,
             AddressService addressService,
-            ClusterService clusterService
-    ) {
+            ClusterService clusterService,
+            LuceneService luceneService) {
         this.workspaceRepository = workspaceRepository;
         this.responseService = responseService;
         this.locationService = locationService;
         this.clusterService = clusterService;
         this.addressService = addressService;
+        this.luceneService = luceneService;
     }
 
     @Transactional(readOnly = true)
@@ -109,27 +110,27 @@ public class WorkspaceService {
         return getGridSquareSize(latDiff, longDiff);
     }
 
-    public Workspace newWorkspace(CreateWorkspaceDTO workspace) {
+    public Workspace newWorkspace(CreateWorkspaceDTO workspaceDTO) {
         double squareSize;
         double clusterMinLat;
         double clusterMaxLat;
         double clusterMinLong;
         double clusterMaxLong;
 
-        Workspace w = Workspace.builder()
-                .name(workspace.getName())
+        Workspace workspace = Workspace.builder()
+                .name(workspaceDTO.getName())
                 .clusters(new ArrayList<>())
                 .build();
 
-        squareSize = this.getSquareSize(workspace);
+        squareSize = this.getSquareSize(workspaceDTO);
 
-        for (double i = workspace.getMinLat() ; i < (workspace.getMaxLat()); i+= squareSize){
-            for (double j = workspace.getMinLong() ; j < workspace.getMaxLong(); j+= squareSize){
+        for (double i = workspaceDTO.getMinLat() ; i < (workspaceDTO.getMaxLat()); i+= squareSize){
+            for (double j = workspaceDTO.getMinLong() ; j < workspaceDTO.getMaxLong(); j+= squareSize){
 
                 clusterMinLat = i;
-                clusterMaxLat = (i + squareSize < workspace.getMaxLat() ? i + squareSize: workspace.getMaxLat());
+                clusterMaxLat = (i + squareSize < workspaceDTO.getMaxLat() ? i + squareSize: workspaceDTO.getMaxLat());
                 clusterMinLong = j;
-                clusterMaxLong = (j + squareSize < workspace.getMaxLat() ? j + squareSize: workspace.getMaxLat());
+                clusterMaxLong = (j + squareSize < workspaceDTO.getMaxLat() ? j + squareSize: workspaceDTO.getMaxLat());
 
                 Cluster cluster = Cluster.builder()
                         .latitude(0)
@@ -137,10 +138,10 @@ public class WorkspaceService {
                         .area("Temp")
                         .address(null)
                         .locations(new ArrayList<>())
-                        .workspace(w)
+                        .workspace(workspace)
                         .build();
 
-                for(CreateLocationDTO locationDTO : workspace.getLocations()){
+                for(CreateLocationDTO locationDTO : workspaceDTO.getLocations()){
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
                             && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)){
                         if( cluster.getClusterId() == null) cluster = this.clusterService.createCluster(cluster);
@@ -162,12 +163,21 @@ public class WorkspaceService {
                     cluster.setAddress(address);
                     cluster.setArea(address.getCity() + ", " + address.getCountry());
 
-                    w.getClusters().add(cluster);
+                    workspace.getClusters().add(cluster);
+                    this.addLocationsInLucene(cluster.getLocations());
                 }
 
             }
         }
-        return w;
+        return workspace;
+    }
+
+    private void addLocationsInLucene(List<Location> locations){
+        try {
+            this.luceneService.addLocations(locations);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean between(double value, double min, double max){

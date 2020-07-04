@@ -44,25 +44,43 @@ public class LuceneService {
     @PostConstruct
     public void setup(){
         try {
-            analyzer = new StandardAnalyzer();
-            index = MMapDirectory.open(Paths.get(this.configuration.getLuceneFolder()));
+            IndexWriter indexWriter = this.getIndexWriter();
 
-            IndexWriterConfig config = new IndexWriterConfig(analyzer);
-
-            IndexWriter w = new IndexWriter(index, config);
-
-            w.deleteAll();
+            indexWriter.deleteAll();
 
             List<Location> locationList = getLocations(this.locationRepository);
 
             for(Location location : locationList){
-                addDoc(w, location);
+                addDoc(indexWriter, location);
             }
-            w.close();
+            this.closeIndexWriter(indexWriter);
         }catch (IOException  e) {
             e.printStackTrace();
         }
     }
+
+    public IndexWriter getIndexWriter() throws IOException {
+        analyzer = new StandardAnalyzer();
+        index = MMapDirectory.open(Paths.get(this.configuration.getLuceneFolder()));
+
+        IndexWriterConfig config = new IndexWriterConfig(analyzer);
+
+        return new IndexWriter(index, config);
+    }
+
+    public void closeIndexWriter(IndexWriter indexWriter) throws IOException {
+        indexWriter.close();
+    }
+
+    public void addLocations(List<Location> locations) throws IOException {
+        IndexWriter indexWriter = this.getIndexWriter();
+        for(Location location : locations){
+            addDoc(indexWriter, location);
+        }
+        this.closeIndexWriter(indexWriter);
+    }
+
+
 
     public List<GetLocationLuceneDTO> searchLocationWithCustom(String field, String query, int count){
         try {

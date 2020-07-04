@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class LocationService {
-    private final Configuration configuration;
     private final LocationRepository locationRepository;
     private final ResponseService responseService;
     private final ClusterRepository clusterRepository;
@@ -45,11 +44,10 @@ public class LocationService {
 
 
     @Autowired
-    public LocationService(Configuration configuration, LocationRepository locationRepository,
+    public LocationService(LocationRepository locationRepository,
                            ResponseService responseService,
                            ClusterRepository clusterRepository,
                            TagRepository tagRepository) {
-        this.configuration = configuration;
         this.locationRepository = locationRepository;
         this.responseService = responseService;
         this.clusterRepository = clusterRepository;
@@ -116,6 +114,7 @@ public class LocationService {
         }
 
         Location created = locationRepository.save(location);
+
         for(Tag t: location.getTags()){
             tagRepository.save(t);
         }

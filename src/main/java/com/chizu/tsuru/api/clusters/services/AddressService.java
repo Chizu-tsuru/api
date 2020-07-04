@@ -28,8 +28,7 @@ public class AddressService {
             String response = geocodingService.getDataFromCoordinate(c.getLatitude(),c.getLongitude());
             Address address = geocodingService.convertResponseStringToAddressObject(response);
 
-            Address created = addressRepository.save(address);
-            return created;
+        return addressRepository.save(address);
     }
 
     @Transactional(readOnly = true)
