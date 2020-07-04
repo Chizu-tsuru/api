@@ -79,7 +79,7 @@ public class GeocodingService {
         return getRequest(request);
     }
 
-    public Address convertResponseStringToAddressObject(String response, Cluster cluster){
+    public Address convertResponseStringToAddressObject(String response){
         return Address.builder()
                 .administrative_area_1(getAdministrativeAreaLevel1FromCoordinate(response))
                 .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))

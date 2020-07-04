@@ -26,7 +26,7 @@ public class AddressService {
     @Transactional
     public Address createAddress(Cluster c) {
             String response = geocodingService.getDataFromCoordinate(c.getLatitude(),c.getLongitude());
-            Address address = geocodingService.convertResponseStringToAddressObject(response, c);
+            Address address = geocodingService.convertResponseStringToAddressObject(response);
 
             Address created = addressRepository.save(address);
             return created;
