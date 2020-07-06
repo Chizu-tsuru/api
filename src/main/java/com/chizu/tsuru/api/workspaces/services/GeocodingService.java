@@ -46,7 +46,9 @@ public class GeocodingService {
         return "";
     }
 
-    private String getRequest(HttpGet request) {
+    private String getRequest(double latitude, double longitude) {
+        HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
+                + longitude + "&key=" + this.configuration.getApiKey());
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             HttpEntity entity = response.getEntity();
 
@@ -81,9 +83,7 @@ public class GeocodingService {
     }
 
     public String getDataFromCoordinate(double latitude, double longitude) {
-        HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
-                + longitude + "&key=" + this.configuration.getApiKey());
-        return getRequest(request);
+        return getRequest(latitude, longitude);
     }
 
     public Address convertResponseStringToAddressObject(String response) {

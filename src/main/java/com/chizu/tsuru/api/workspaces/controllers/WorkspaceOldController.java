@@ -33,8 +33,6 @@ public class WorkspaceOldController {
 
     @PostMapping
     public ResponseEntity<Void> CreateWorkspace(@Validated @RequestBody CreateWorkspaceDTO workspace) {
-
-
         if (!workspace.isValid()) {
             throw new BadRequestException("limitation point are invalid");
         }
@@ -45,12 +43,6 @@ public class WorkspaceOldController {
         Integer workspaceId = this.workspaceService.createWorkspace(w);
         URI location = this.uriService.fromParent(workspaceId);
         return ResponseEntity.created(location).build();
-    }
-
-    @GetMapping("/{idWorkspace}")
-    public GetWorkspaceDTO getWorkspace(@PathVariable("idWorkspace") Integer idWorkspace) {
-        return this.responseService
-                .getWorkspaceDTO(this.workspaceService.getWorkspace(idWorkspace));
     }
 
 

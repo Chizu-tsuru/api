@@ -25,14 +25,15 @@ public class ClusterModel {
 
     private String area;
 
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
     @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "workspace_id")
     private WorkspaceModel workspace;
 
     @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LocationModel> locations = new ArrayList<>();
+
+    @OneToOne(mappedBy = "cluster")
+    private AddressModel address;
 
     public ClusterModel() {
     }
@@ -94,6 +95,14 @@ public class ClusterModel {
         this.locations = locations;
     }
 
+    public AddressModel getAddress() {
+        return address;
+    }
+
+    public void setAddress(AddressModel address) {
+        this.address = address;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -118,11 +127,13 @@ public class ClusterModel {
     }
 
     public static ClusterModel fromCluster(Cluster cluster, WorkspaceModel workspaceModel) {
-        var w = new ClusterModel(cluster.getClusterId(), cluster.getLongitude(), cluster.getLatitude(),
+        var c = new ClusterModel(cluster.getClusterId(), cluster.getLongitude(), cluster.getLatitude(),
                 cluster.getArea(), workspaceModel);
-        var locations = cluster.getLocations().stream().map(location -> LocationModel.fromLocation(location, w))
+        var address = AddressModel.fromAddress(cluster.getAddress(), c);
+        var locations = cluster.getLocations().stream().map(location -> LocationModel.fromLocation(location, c))
                 .collect(Collectors.toList());
-        w.setLocations(locations);
-        return w;
+        c.setLocations(locations);
+        c.setAddress(address);
+        return c;
     }
 }

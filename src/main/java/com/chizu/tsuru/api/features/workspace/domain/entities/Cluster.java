@@ -8,6 +8,7 @@ public class Cluster {
     private double latitude;
     private String area;
     private List<Location> locations;
+    private Address address;
 
     public Cluster(Integer clusterId, double longitude, double latitude, String area, List<Location> locations) {
         this.clusterId = clusterId;
@@ -16,6 +17,8 @@ public class Cluster {
         this.area = area;
         this.locations = locations;
     }
+
+    public Cluster() {}
 
     public Integer getClusterId() {
         return clusterId;
@@ -72,5 +75,13 @@ public class Cluster {
     @Override
     public int hashCode() {
         return Objects.hash(clusterId, longitude, latitude, area, locations);
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

@@ -1,10 +1,11 @@
-package com.chizu.tsuru.api.features.workspace.presentation;
+package com.chizu.tsuru.api.features.workspace.presentation.services;
 
 import com.chizu.tsuru.api.core.services.URIService;
 import com.chizu.tsuru.api.features.workspace.domain.entities.Workspace;
 import com.chizu.tsuru.api.features.workspace.presentation.dto.GetWorkspaceDTO;
 import org.springframework.stereotype.Service;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,5 +24,9 @@ public class ResponseService {
 
     public List<GetWorkspaceDTO> workspacesToDTO(List<Workspace> workspaces) {
         return workspaces.stream().map(this::workspaceToDTO).collect(Collectors.toList());
+    }
+
+    public URI getLocationWorkspace(Integer workspaceId) {
+        return uriService.fromParent(workspaceId);
     }
 }

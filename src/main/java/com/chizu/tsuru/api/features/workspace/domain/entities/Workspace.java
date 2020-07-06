@@ -1,4 +1,5 @@
 package com.chizu.tsuru.api.features.workspace.domain.entities;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,11 @@ public class Workspace {
 
     public Workspace(Integer workspaceId, String name, List<Cluster> clusters) {
         this.workspaceId = workspaceId;
+        this.name = name;
+        this.clusters = clusters;
+    }
+
+    public <E> Workspace(String name, ArrayList<Cluster> clusters) {
         this.name = name;
         this.clusters = clusters;
     }
