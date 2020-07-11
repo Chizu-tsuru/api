@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.workspaces.controllers;
 
+import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
@@ -63,6 +64,12 @@ public class WorkspaceController {
     public GetWorkspaceDTO getWorkspace(@PathVariable("idWorkspace") Integer idWorkspace) {
         return this.responseService
                 .getWorkspaceDTO(this.workspaceService.getWorkspace(idWorkspace));
+    }
+
+    @GetMapping("/{idWorkspace}/clusters")
+    public List<GetClusterDTO> getClustersByWorkspace(@PathVariable("idWorkspace") Integer idWorkspace) {
+        return this.workspaceService.getClustersByWorkspace(idWorkspace);
+
     }
 
 

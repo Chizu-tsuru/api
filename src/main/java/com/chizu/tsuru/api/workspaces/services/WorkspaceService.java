@@ -1,8 +1,11 @@
 package com.chizu.tsuru.api.workspaces.services;
 
+import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
+import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.clusters.entities.Location;
+import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.services.AddressService;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
@@ -28,6 +31,7 @@ import java.util.stream.Collectors;
 public class WorkspaceService {
 
     private final WorkspaceRepository workspaceRepository;
+    private final ClusterRepository clusterRepository;
     private final ResponseService responseService;
     private final LocationService locationService;
     private final ClusterService clusterService;
@@ -40,12 +44,13 @@ public class WorkspaceService {
     @Autowired
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
-            ResponseService responseService,
+            ClusterRepository clusterRepository, ResponseService responseService,
             LocationService locationService,
             AddressService addressService,
             ClusterService clusterService,
             LuceneService luceneService) {
         this.workspaceRepository = workspaceRepository;
+        this.clusterRepository = clusterRepository;
         this.responseService = responseService;
         this.locationService = locationService;
         this.clusterService = clusterService;
@@ -59,6 +64,14 @@ public class WorkspaceService {
                 .findAll()
                 .stream()
                 .map(this.responseService::getWorkspaceDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<GetClusterDTO> getClustersByWorkspace(Integer workspaceId) {
+        return clusterRepository.findAllByWorkspaceId(workspaceId)
+                .stream()
+                .map(this.responseService::getClusterDTO)
                 .collect(Collectors.toList());
     }
 
@@ -130,7 +143,7 @@ public class WorkspaceService {
                 clusterMinLat = i;
                 clusterMaxLat = (i + squareSize < workspaceDTO.getMaxLat() ? i + squareSize: workspaceDTO.getMaxLat());
                 clusterMinLong = j;
-                clusterMaxLong = (j + squareSize < workspaceDTO.getMaxLat() ? j + squareSize: workspaceDTO.getMaxLat());
+                clusterMaxLong = (j + squareSize < workspaceDTO.getMaxLong() ? j + squareSize: workspaceDTO.getMaxLong());
 
                 Cluster cluster = Cluster.builder()
                         .latitude(0)

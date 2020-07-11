@@ -25,18 +25,26 @@ public class GeocodingService {
         this.configuration = configuration;
     }
 
-    private String extractDataFromCoordinate(int index, String jsonResponse) {
+    private String extractDataFromCoordinate(String index, String jsonResponse) {
         try {
             JSONObject obj = new JSONObject(jsonResponse);
             JSONArray res = obj.getJSONArray("results");
             if (res.length() != 0) {
-                JSONObject result = res.getJSONObject(0).getJSONArray("address_components").getJSONObject(index);
-                return result.getString("long_name");
+                JSONArray result = res.getJSONObject(0).getJSONArray("address_components");
+                for(int i =0 ; i < result.length(); i++){
+                    JSONObject jsonObject = result.getJSONObject(i);
+                    JSONArray types = jsonObject.getJSONArray("types");
+                    for(int y = 0 ; y < types.length(); y++){
+                        if(types.getString(y).equals(index)){
+                            return jsonObject.getString("long_name");
+                        }
+                    }
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     private String getRequest(HttpGet request){
@@ -54,23 +62,23 @@ public class GeocodingService {
     }
 
     private String getCityFromCoordinate(String jsonResponse){
-        return extractDataFromCoordinate(2, jsonResponse);
+        return extractDataFromCoordinate("locality", jsonResponse);
     }
 
     private String getAdministrativeAreaLevel2FromCoordinate(String jsonResponse){
-        return extractDataFromCoordinate(3, jsonResponse);
+        return extractDataFromCoordinate("administrative_area_level_2", jsonResponse);
     }
 
     private String getAdministrativeAreaLevel1FromCoordinate(String jsonResponse){
-        return extractDataFromCoordinate(4, jsonResponse);
+        return extractDataFromCoordinate("administrative_area_level_1", jsonResponse);
     }
 
     private String getCountryFromCoordinate(String jsonResponse){
-        return extractDataFromCoordinate(5, jsonResponse);
+        return extractDataFromCoordinate("country", jsonResponse);
     }
 
     private String getAreaFromCoordinate(String jsonResponse){
-        return extractDataFromCoordinate(6, jsonResponse);
+        return extractDataFromCoordinate("postal_code", jsonResponse);
     }
 
     public String getDataFromCoordinate(double latitude, double longitude){
