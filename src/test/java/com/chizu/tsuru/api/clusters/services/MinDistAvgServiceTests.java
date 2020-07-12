@@ -24,7 +24,7 @@ public class MinDistAvgServiceTests {
         ArrayList<Location> data = new ArrayList<>();
         data.add(Location.builder().latitude(48.837335).longitude(2.570596).build());
         data.add(Location.builder().latitude(48.843701).longitude(2.579262).build());
-        double wanted = 0.9748948926795818;
+        double wanted = 0.9504200517727334;
         double result = cs.anyClosestDist(data);
         assertThat(result).isEqualTo(wanted);
     }
@@ -35,7 +35,7 @@ public class MinDistAvgServiceTests {
         p.add(Location.builder().latitude(48.837335).longitude(2.570596).build());
         p.add(Location.builder().latitude(48.843701).longitude(2.579262).build());
         double result = cs.minAvgDist(p).getMinMaxAvgDistance();
-        double wanted = 0.9748948926795818;
+        double wanted = 0.9504200517727334;
         assertThat(result).isEqualTo(wanted);
     }
 
@@ -52,7 +52,7 @@ public class MinDistAvgServiceTests {
         p.add(Location.builder().latitude(3.0).longitude(1.0).build());
         p.add(Location.builder().latitude(7.0).longitude(3.0).build());
         double result = cs.minAvgDist(p).getMinMaxAvgDistance();
-        double wanted = 20.57076228487494;
+        double wanted = 439.6255827831875;
         assertThat(result).isEqualTo(wanted);
     }
 }
