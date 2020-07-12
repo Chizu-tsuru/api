@@ -82,11 +82,7 @@ public class MinDistAvgService {
     private double kruskalToDist(List<Edge> edges) {
         List<Double> res = new ArrayList<>();
         for (Edge edge : edges) {
-            System.out.println("from (" + edge.l1.toLocation().getLatitude() + ", " + edge.l1.toLocation().getLongitude() + ") to (" + edge.l2.toLocation().getLatitude() + ", " + edge.l2.toLocation().getLongitude() + ")");
-            Double tmp = this.mapService.getDistance(edge.l1.toLocation(), edge.l2.toLocation());
-            System.out.println("dist:" + tmp + "\n");
-            res.add(tmp);
-//            res.add(this.mapService.getDistance(edge.l1.toLocation(), edge.l2.toLocation()));
+            res.add(this.mapService.getDistance(edge.l1.toLocation(), edge.l2.toLocation()));
         }
         return res
                 .stream()
