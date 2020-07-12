@@ -99,6 +99,7 @@ public class WorkspaceService {
     }
 
     public double getAbsDiff(double min, double max, int side){
+        System.out.println(side+"min/max : "+min+"/"+max);
 
         switch(side){
             case LATITUDE:
@@ -119,6 +120,8 @@ public class WorkspaceService {
     public double getSquareSize(CreateWorkspaceDTO workspace){
         double latDiff = coordinatesRound(getAbsDiff(workspace.getMinLat(), workspace.getMaxLat(), LATITUDE));
         double longDiff = coordinatesRound(getAbsDiff(workspace.getMinLong(), workspace.getMaxLong(), LONGITUDE));
+        System.out.println("latDiff : "+latDiff);
+        System.out.println("longDiff : "+longDiff);
 
         return getGridSquareSize(latDiff, longDiff);
     }
@@ -129,6 +132,9 @@ public class WorkspaceService {
         double clusterMaxLat;
         double clusterMinLong;
         double clusterMaxLong;
+        double i;
+        double j;
+        boolean minLongIsGreaterThanMaxLong = workspaceDTO.getMinLong() > workspaceDTO.getMaxLong();
 
         Workspace workspace = Workspace.builder()
                 .name(workspaceDTO.getName())
@@ -137,14 +143,17 @@ public class WorkspaceService {
 
         squareSize = this.getSquareSize(workspaceDTO);
 
-        for (double i = workspaceDTO.getMinLat() ; i < (workspaceDTO.getMaxLat()); i+= squareSize){
-            for (double j = workspaceDTO.getMinLong() ; j < workspaceDTO.getMaxLong(); j+= squareSize){
-
+        for (i = workspaceDTO.getMinLat() ; i < workspaceDTO.getMaxLat(); i+= squareSize){
+            for (j = workspaceDTO.getMinLong() ; minLongIsGreaterThanMaxLong ?  !(j < workspaceDTO.getMinLong() && j > workspaceDTO.getMaxLong()) : j < workspaceDTO.getMaxLong() ; j+= squareSize){
                 clusterMinLat = i;
                 clusterMaxLat = (i + squareSize < workspaceDTO.getMaxLat() ? i + squareSize: workspaceDTO.getMaxLat());
                 clusterMinLong = j;
-                clusterMaxLong = (j + squareSize < workspaceDTO.getMaxLong() ? j + squareSize: workspaceDTO.getMaxLong());
 
+                if(minLongIsGreaterThanMaxLong){
+                    clusterMaxLong =  !(j + squareSize < workspaceDTO.getMinLong() && j + squareSize > workspaceDTO.getMaxLong())?  j + squareSize : workspaceDTO.getMaxLong();
+                }else{
+                    clusterMaxLong = (j + squareSize < workspaceDTO.getMaxLong() ? j + squareSize: workspaceDTO.getMaxLong());
+                }
                 Cluster cluster = Cluster.builder()
                         .latitude(0)
                         .longitude(0)
@@ -157,7 +166,9 @@ public class WorkspaceService {
                 for(CreateLocationDTO locationDTO : workspaceDTO.getLocations()){
                     if (between(locationDTO.getLatitude(), clusterMinLat, clusterMaxLat)
                             && between(locationDTO.getLongitude(), clusterMinLong, clusterMaxLong)){
-                        if( cluster.getClusterId() == null) cluster = this.clusterService.createCluster(cluster);
+                        if( cluster.getClusterId() == null){
+                            cluster = this.clusterService.createCluster(cluster);
+                        }
 
                         Location location = this.locationService.createLocation(locationDTO, cluster.getClusterId());
 
@@ -168,7 +179,7 @@ public class WorkspaceService {
                     }
                 }
 
-                if(cluster.getLocations().size() != 0){
+                if(cluster.getClusterId() != null){
                     cluster.setLatitude(cluster.getLatitude() / cluster.getLocations().size());
                     cluster.setLongitude(cluster.getLongitude() / cluster.getLocations().size());
 
@@ -179,7 +190,9 @@ public class WorkspaceService {
                     workspace.getClusters().add(cluster);
                     this.addLocationsInLucene(cluster.getLocations());
                 }
-
+                if( j > 180){
+                    j = -180;
+                }
             }
         }
         return workspace;

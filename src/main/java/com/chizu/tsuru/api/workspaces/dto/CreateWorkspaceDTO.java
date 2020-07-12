@@ -22,6 +22,6 @@ public class CreateWorkspaceDTO {
     private List<CreateLocationDTO> locations;
 
     public boolean isValid() {
-        return minLat < maxLat && minLong < maxLong;
+        return minLat < maxLat;
     }
 }
