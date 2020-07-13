@@ -9,12 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetClusterDTO {
-
-    private Double longitude;
-    private Double latitude;
+public class GetAddressDTO {
+    private Integer addressId;
+    private String administrative_area_1;
+    private String administrative_area_2;
     private String area;
-    private String locations;
-    private String address;
-    private String workspace;
+    private String city;
+    private String country;
 }

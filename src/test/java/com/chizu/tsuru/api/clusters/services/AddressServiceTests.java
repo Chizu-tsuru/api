@@ -7,8 +7,7 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class AddressServiceTests {
 
 
@@ -32,7 +31,7 @@ public class AddressServiceTests {
         addressRepository = mock(AddressRepository.class);
         clusterRepository = mock(ClusterRepository.class);
         geocodingService = mock(GeocodingService.class);
-        addressService = new AddressService(addressRepository, clusterRepository, geocodingService);
+        addressService = new AddressService(addressRepository, geocodingService);
 
         Cluster cluster = Cluster.builder()
                 .latitude(2.18)
@@ -49,7 +48,6 @@ public class AddressServiceTests {
                 .administrative_area_2("administrative_area_2")
                 .area("area")
                 .city("city")
-                .cluster(cluster)
                 .country("country")
                 .build();
         when(addressRepository.save(any())).thenReturn(address);
@@ -57,6 +55,13 @@ public class AddressServiceTests {
 
     @Test
     public void createAddress_should_return_1_test() {
-        assertThat(addressService.createAddress(1).getAddressId()).isEqualTo(1);
+        Cluster cluster = Cluster.builder()
+                .latitude(2.18)
+                .longitude(2.18)
+                .area("Paris, France")
+                .locations(new ArrayList<>())
+                .workspace(null)
+                .build();
+        assertThat(addressService.createAddress(cluster).getAddressId()).isEqualTo(1);
     }
 }

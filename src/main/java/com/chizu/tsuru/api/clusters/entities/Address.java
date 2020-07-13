@@ -1,8 +1,12 @@
 package com.chizu.tsuru.api.clusters.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Data
@@ -11,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "address")
-public class Address {
+public class Address implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,11 +30,5 @@ public class Address {
     private String country;
 
     private String city;
-
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cluster_id")
-    private Cluster cluster;
 
 }

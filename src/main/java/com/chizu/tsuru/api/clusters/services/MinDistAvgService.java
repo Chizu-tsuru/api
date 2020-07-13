@@ -99,9 +99,9 @@ public class MinDistAvgService {
 
     static class Local {
         static int nex_id = 0;
-        int clusterId = nex_id++;
         private final Double latitude;
         private final Double longitude;
+        int clusterId = nex_id++;
 
         Local(double Longitude, double Latitude) {
             this.longitude = Longitude;

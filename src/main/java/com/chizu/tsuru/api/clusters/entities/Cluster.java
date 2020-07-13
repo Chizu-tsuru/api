@@ -22,6 +22,7 @@ public class Cluster implements Serializable {
 
     @NotNull
     private double longitude;
+
     @NotNull
     private double latitude;
 
@@ -35,4 +36,10 @@ public class Cluster implements Serializable {
 
     @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Location> locations;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private Address address;
 }

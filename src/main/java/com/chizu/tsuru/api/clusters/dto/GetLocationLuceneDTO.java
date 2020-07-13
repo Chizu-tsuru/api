@@ -5,16 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetClusterDTO {
-
+public class GetLocationLuceneDTO {
+    private Integer locationId;
     private Double longitude;
     private Double latitude;
-    private String area;
-    private String locations;
-    private String address;
-    private String workspace;
+    private List<String> tags;
+    private String cluster;
 }

@@ -31,7 +31,7 @@ public class TravelServiceTests {
         locations.add(Location.builder().locationId(2).cluster(cluster).latitude(48.8048684).longitude(2.1181667).build());
         locations.add(Location.builder().locationId(2).cluster(cluster).latitude(48.8001348).longitude(2.1846854).build());
 
-        var expected = GetTravelDTO.builder().distance(3.3776915580460463).locations(new ArrayList<>() {
+        var expected = GetTravelDTO.builder().distance(5.620408964998223).locations(new ArrayList<>() {
             {
                 add(GetLocationDTO.builder().latitude(48.8047708).longitude(2.1863857).build());
                 add(GetLocationDTO.builder().latitude(48.8001348).longitude(2.1846854).build());

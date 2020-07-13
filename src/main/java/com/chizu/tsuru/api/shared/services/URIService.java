@@ -48,4 +48,12 @@ public class URIService {
                 .build()
                 .toUri();
     }
+
+    public URI getAddress(Integer addressId) {
+        return ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/addresses/{id}")
+                .buildAndExpand(addressId)
+                .toUri();
+    }
 }
