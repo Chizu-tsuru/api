@@ -19,7 +19,7 @@ ENV MYSQL_PASSWORD $MYSQL_TEST_PASSWORD
 ENV LUCENE_FOLDER $LUCENE_FOLDER
 ENV PORT $PORT
 
-RUN mkdir $LUCENE_FOLDER
+RUN mkdir /lucene
 
 WORKDIR /app
 
@@ -39,7 +39,7 @@ ENV LUCENE_FOLDER /lucene
 
 WORKDIR /app
 
-RUN mkdir $LUCENE_FOLDER
+RUN mkdir /lucene
 
 COPY --from=builder /app/target/chizutsuru-api-0.0.1-rc0.jar /app/api.jar
 
