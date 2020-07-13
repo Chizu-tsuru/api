@@ -46,7 +46,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: deploy
-        uses: azure/webapps-container-deploy@v1
+        uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ secrets.AZURE_APP_NAME }}
           images: ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }}
