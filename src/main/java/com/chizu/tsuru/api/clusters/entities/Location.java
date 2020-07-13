@@ -45,7 +45,7 @@ public class Location {
         return GetLocationDTO.builder()
                 .latitude(latitude)
                 .longitude(longitude)
-                .tags(tags.stream().map(Tag::getName).collect(Collectors.toList()))
+                .tags(tags != null ? tags.stream().map(Tag::getName).collect(Collectors.toList()) : null)
                 .build();
     }
 

@@ -21,7 +21,17 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Build version
-        run: docker build --build-arg MAP_API_URL_ARG=${{secrets.MAP_API_URL}}  --build-arg GOOGLE_API_KEY_ARG=${{ secrets.GOOGLE_API_KEY }} -t ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }} .
+        run: docker-compose build
+        env:
+          TAG_VERSION: ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }}
+          MYSQL_HOST: ${{ secrets.MYSQL_TESTING_HOST }}
+          MYSQL_PORT: ${{ secrets.MYSQL_TESTING_PORT }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_TESTING_DATABASE }}
+          MYSQL_USERNAME: ${{ secrets.MYSQL_TESTING_USERNAME }}
+          MYSQL_PASSWORD: ${{ secrets.MYSQL_TESTING_PASSWORD }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          LUCENE_FOLDER: ${{ secrets.LUCENE_FOLDER }}
+          PORT: ${{ secrets.PORT }}
       - name: Tag image staging-latest
         run: docker tag ${{ secrets.DOCKER_IMAGE }}:${{ steps.tag.outputs.tag }} ${{ secrets.DOCKER_IMAGE }}:staging-latest
       - name: Push to docker hub ${{ steps.tag.outputs.tag }}
