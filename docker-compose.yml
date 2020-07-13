@@ -1,14 +1,15 @@
 version: '3'
 services:
   chizutsuru:
+    image: ${TAG_VERSION}
     build:
       context: .
       args:
-        CHIZUTSURU_PORT: ${CHIZUTSURU_PORT}
-        MYSQL_HOST_ARG: ${MYSQL_HOST}
-        MYSQL_PORT_ARG: ${MYSQL_PORT}
-        MYSQL_DATABASE_ARG: ${MYSQL_DATABASE}
-        MYSQL_USERNAME_ARG: ${MYSQL_USERNAME}
-        MYSQL_PASSWORD_ARG: ${MYSQL_PASSWORD}
-    ports:
-      - "8080:8080"
+        PORT: ${PORT}
+        MYSQL_TEST_HOST: ${MYSQL_HOST}
+        MYSQL_TEST_PORT: ${MYSQL_PORT}
+        MYSQL_TEST_DATABASE: ${MYSQL_DATABASE}
+        MYSQL_TEST_USERNAME: ${MYSQL_USERNAME}
+        MYSQL_TEST_PASSWORD: ${MYSQL_PASSWORD}
+        GOOGLE_API_KEY: ${GOOGLE_API_KEY}
+        LUCENE_FOLDER: ${LUCENE_FOLDER}
