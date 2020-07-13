@@ -35,8 +35,11 @@ ENV MYSQL_HOST locahost
 ENV MYSQL_USERNAME user
 ENV MYSQL_PASSWORD pwd
 ENV MYSQL_DATABASE db
+ENV LUCENE_FOLDER /lucene
 
 WORKDIR /app
+
+RUN mkdir $LUCENE_FOLDER
 
 COPY --from=builder /app/target/chizutsuru-api-0.0.1-rc0.jar /app/api.jar
 
