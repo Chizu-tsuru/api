@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Entity
@@ -43,7 +44,9 @@ public class Location {
     public GetLocationDTO toResponse() {
         return GetLocationDTO.builder()
                 .latitude(latitude)
-                .longitude(longitude).build();
+                .longitude(longitude)
+                .tags(tags.stream().map(Tag::getName).collect(Collectors.toList()))
+                .build();
     }
 
 }
