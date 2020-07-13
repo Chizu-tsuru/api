@@ -1,7 +1,6 @@
 package com.chizu.tsuru.api.workspaces.services;
 
 import com.chizu.tsuru.api.clusters.entities.Address;
-import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.config.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -31,11 +30,11 @@ public class GeocodingService {
             JSONArray res = obj.getJSONArray("results");
             if (res.length() != 0) {
                 JSONArray result = res.getJSONObject(0).getJSONArray("address_components");
-                for(int i =0 ; i < result.length(); i++){
+                for (int i = 0; i < result.length(); i++) {
                     JSONObject jsonObject = result.getJSONObject(i);
                     JSONArray types = jsonObject.getJSONArray("types");
-                    for(int y = 0 ; y < types.length(); y++){
-                        if(types.getString(y).equals(index)){
+                    for (int y = 0; y < types.length(); y++) {
+                        if (types.getString(y).equals(index)) {
                             return jsonObject.getString("long_name");
                         }
                     }
@@ -47,7 +46,7 @@ public class GeocodingService {
         return "";
     }
 
-    private String getRequest(HttpGet request){
+    private String getRequest(HttpGet request) {
         try (CloseableHttpResponse response = httpClient.execute(request)) {
             HttpEntity entity = response.getEntity();
 
@@ -61,33 +60,33 @@ public class GeocodingService {
         return null;
     }
 
-    private String getCityFromCoordinate(String jsonResponse){
+    private String getCityFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate("locality", jsonResponse);
     }
 
-    private String getAdministrativeAreaLevel2FromCoordinate(String jsonResponse){
+    private String getAdministrativeAreaLevel2FromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate("administrative_area_level_2", jsonResponse);
     }
 
-    private String getAdministrativeAreaLevel1FromCoordinate(String jsonResponse){
+    private String getAdministrativeAreaLevel1FromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate("administrative_area_level_1", jsonResponse);
     }
 
-    private String getCountryFromCoordinate(String jsonResponse){
+    private String getCountryFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate("country", jsonResponse);
     }
 
-    private String getAreaFromCoordinate(String jsonResponse){
+    private String getAreaFromCoordinate(String jsonResponse) {
         return extractDataFromCoordinate("postal_code", jsonResponse);
     }
 
-    public String getDataFromCoordinate(double latitude, double longitude){
+    public String getDataFromCoordinate(double latitude, double longitude) {
         HttpGet request = new HttpGet(this.configuration.getApiUrl() + "?latlng=" + latitude + ","
                 + longitude + "&key=" + this.configuration.getApiKey());
         return getRequest(request);
     }
 
-    public Address convertResponseStringToAddressObject(String response){
+    public Address convertResponseStringToAddressObject(String response) {
         return Address.builder()
                 .administrative_area_1(getAdministrativeAreaLevel1FromCoordinate(response))
                 .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))

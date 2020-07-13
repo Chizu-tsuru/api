@@ -7,8 +7,8 @@ import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@SpringBootTest
 public class AddressServiceTests {
 
 
@@ -27,7 +27,7 @@ public class AddressServiceTests {
     private static AddressService addressService;
 
     @BeforeClass
-    public static void setup(){
+    public static void setup() {
         addressRepository = mock(AddressRepository.class);
         clusterRepository = mock(ClusterRepository.class);
         geocodingService = mock(GeocodingService.class);
@@ -54,7 +54,7 @@ public class AddressServiceTests {
     }
 
     @Test
-    public void createAddress_should_return_1_test(){
+    public void createAddress_should_return_1_test() {
         Cluster cluster = Cluster.builder()
                 .latitude(2.18)
                 .longitude(2.18)

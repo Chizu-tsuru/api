@@ -1,6 +1,9 @@
 package com.chizu.tsuru.api.clusters.controllers;
 
-import com.chizu.tsuru.api.clusters.dto.*;
+import com.chizu.tsuru.api.clusters.dto.GetClusterDTO;
+import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
+import com.chizu.tsuru.api.clusters.dto.GetMinMaxAvgDTO;
+import com.chizu.tsuru.api.clusters.dto.GetTravelDTO;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.MinDistAvgService;
@@ -27,12 +30,11 @@ public class ClusterController {
         this.locationService = locationService;
         this.travelService = travelService;
         this.minDistAvgService = minDistAvgService;
-
     }
 
     @GetMapping("/{idCluster}")
     public GetClusterDTO getCluster(@PathVariable("idCluster") Integer idCluster) {
-        return this.responseService.getClusterDTO(this.clusterService.getCluster(idCluster)) ;
+        return this.responseService.getClusterDTO(this.clusterService.getCluster(idCluster));
     }
 
     @GetMapping("/{idCluster}/travel")
@@ -51,7 +53,7 @@ public class ClusterController {
 
     @GetMapping("/{idCluster}/locations")
     public List<GetLocationDTO> getLocationFromCluster(@PathVariable("idCluster") Integer idCluster) {
-        return this.locationService.getLocationsByCluster(idCluster) ;
+        return this.locationService.getLocationsByCluster(idCluster);
     }
 
 

@@ -1,6 +1,5 @@
 package com.chizu.tsuru.api.clusters.dto;
 
-import com.chizu.tsuru.api.clusters.entities.Address;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

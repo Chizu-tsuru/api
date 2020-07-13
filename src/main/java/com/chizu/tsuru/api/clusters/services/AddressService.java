@@ -2,9 +2,8 @@ package com.chizu.tsuru.api.clusters.services;
 
 import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
-import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.clusters.repositories.AddressRepository;
-import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
+import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,8 @@ public class AddressService {
 
     @Transactional
     public Address createAddress(Cluster c) {
-            String response = geocodingService.getDataFromCoordinate(c.getLatitude(),c.getLongitude());
-            Address address = geocodingService.convertResponseStringToAddressObject(response);
+        String response = geocodingService.getDataFromCoordinate(c.getLatitude(), c.getLongitude());
+        Address address = geocodingService.convertResponseStringToAddressObject(response);
 
         return addressRepository.save(address);
     }

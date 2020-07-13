@@ -1,9 +1,8 @@
 package com.chizu.tsuru.api.workspaces.entities;
 
 import com.chizu.tsuru.api.clusters.entities.Cluster;
-import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
-import com.chizu.tsuru.api.shared.services.URIService;
 import lombok.*;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -24,7 +23,8 @@ public class Workspace implements Serializable {
     @NotNull
     private String name;
 
-    @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "workspace", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Cluster> clusters;
 

@@ -14,10 +14,10 @@ import java.util.List;
 public interface LocationRepository extends JpaRepository<Location, Integer> {
     List<Location> findAllByCluster(@Param("cluster") Cluster cluster);
 
-    @Query(value = "SELECT * from locations WHERE cluster_id = :cluster", nativeQuery=true)
+    @Query(value = "SELECT * from locations WHERE cluster_id = :cluster", nativeQuery = true)
     List<Location> findAllByClusterId(@Param("cluster") Integer cluster);
 
-    @Query(value = "SELECT * from locations WHERE cluster_id IN (SELECT cluster_id FROM clusters WHERE workspace_id = :workspace)", nativeQuery=true)
+    @Query(value = "SELECT * from locations WHERE cluster_id IN (SELECT cluster_id FROM clusters WHERE workspace_id = :workspace)", nativeQuery = true)
     List<Location> findAllByWorkspace(@Param("workspace") Workspace workspace);
 
 }

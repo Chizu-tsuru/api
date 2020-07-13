@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 public class ResponseService {
 
     private final URIService uriService;
+
     public ResponseService(URIService uriService) {
         this.uriService = uriService;
     }
@@ -31,7 +32,7 @@ public class ResponseService {
     }
 
     public GetClusterDTO getClusterDTO(Cluster c) {
-                return GetClusterDTO.builder()
+        return GetClusterDTO.builder()
                 .area(c.getArea())
                 .latitude(c.getLatitude())
                 .longitude(c.getLongitude())
@@ -49,14 +50,14 @@ public class ResponseService {
                 .build();
     }
 
-    public List<GetLocationLuceneDTO> getLocationLuceneDTO(List<GetLocationLuceneDTO> getLocationDTOList){
-        for(GetLocationLuceneDTO item : getLocationDTOList){
+    public List<GetLocationLuceneDTO> getLocationLuceneDTO(List<GetLocationLuceneDTO> getLocationDTOList) {
+        for (GetLocationLuceneDTO item : getLocationDTOList) {
             item.setCluster(this.uriService.getCluster(Integer.parseInt(item.getCluster())).toString());
         }
         return getLocationDTOList;
     }
 
-    public GetAddressDTO getAddressDTO(Address a){
+    public GetAddressDTO getAddressDTO(Address a) {
         return GetAddressDTO.builder()
                 .addressId(a.getAddressId())
                 .administrative_area_1(a.getAdministrative_area_1())

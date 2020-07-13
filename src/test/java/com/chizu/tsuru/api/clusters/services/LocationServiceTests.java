@@ -6,7 +6,6 @@ import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.ClusterRepository;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.clusters.repositories.TagRepository;
-import com.chizu.tsuru.api.config.Configuration;
 import com.chizu.tsuru.api.shared.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import org.junit.BeforeClass;
@@ -40,13 +39,13 @@ public class LocationServiceTests {
 
 
     @BeforeClass
-    public static void setup(){
+    public static void setup() {
         locationRepository = mock(LocationRepository.class);
         responseService = mock(ResponseService.class);
         clusterRepository = mock(ClusterRepository.class);
         tagRepository = mock(TagRepository.class);
 
-        locationService = new LocationService(locationRepository, responseService, clusterRepository,tagRepository);
+        locationService = new LocationService(locationRepository, responseService, clusterRepository, tagRepository);
 
         cluster = Cluster.builder()
                 .latitude(2.18)
@@ -76,7 +75,7 @@ public class LocationServiceTests {
     }
 
     @Test
-    public void createLocation_should_return_3_test(){
+    public void createLocation_should_return_3_test() {
         CreateLocationDTO createLocationDTO = new CreateLocationDTO();
         createLocationDTO.setLatitude(location.getLatitude());
         createLocationDTO.setLongitude(location.getLongitude());

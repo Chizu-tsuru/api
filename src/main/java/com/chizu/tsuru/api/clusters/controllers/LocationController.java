@@ -9,7 +9,6 @@ import com.chizu.tsuru.api.shared.services.ResponseService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -42,12 +41,12 @@ public class LocationController {
     }
 
     @GetMapping("/search/custom")
-    public List<GetLocationLuceneDTO> GetLocationByLongitude(@RequestParam(value="field") String field,
-                                       @RequestParam(value="query") String query,
-                                       @RequestParam(value="count", required = false) String countStr,
+    public List<GetLocationLuceneDTO> GetLocationByLongitude(@RequestParam(value = "field") String field,
+                                                             @RequestParam(value = "query") String query,
+                                                             @RequestParam(value = "count", required = false) String countStr,
                                                              HttpServletRequest request) {
         int count = default_count;
-        if(countStr != null) {
+        if (countStr != null) {
             count = Math.min(Integer.parseInt(countStr), default_count);
         }
         long startTime = System.currentTimeMillis();
@@ -59,7 +58,7 @@ public class LocationController {
 
         Date date = new Date();
 
-        List<GetLocationLuceneDTO> response =  luceneService.searchLocationWithCustom(field, query, count);
+        List<GetLocationLuceneDTO> response = luceneService.searchLocationWithCustom(field, query, count);
 
         long endTime = System.currentTimeMillis();
         double executionTime = endTime - startTime;
@@ -71,28 +70,28 @@ public class LocationController {
 
     @GetMapping("/search/multiple")
     public List<GetLocationLuceneDTO> GetLocationByMultipleValue(
-            @RequestParam(value="latitude", required = false) String q_latitude,
+            @RequestParam(value = "latitude", required = false) String q_latitude,
 
-            @RequestParam(value="longitude", required = false) String q_longitude,
+            @RequestParam(value = "longitude", required = false) String q_longitude,
 
-            @RequestParam(value="city", required = false) String q_city,
+            @RequestParam(value = "city", required = false) String q_city,
 
-            @RequestParam(value="area", required = false) String q_area,
+            @RequestParam(value = "area", required = false) String q_area,
 
-            @RequestParam(value="administrative_area_1", required = false) String q_administrative_area_1,
+            @RequestParam(value = "administrative_area_1", required = false) String q_administrative_area_1,
 
-            @RequestParam(value="administrative_area_2", required = false) String q_administrative_area_2,
+            @RequestParam(value = "administrative_area_2", required = false) String q_administrative_area_2,
 
-            @RequestParam(value="country", required = false) String q_country,
+            @RequestParam(value = "country", required = false) String q_country,
 
-            @RequestParam(value="tags", required = false) String q_tags,
+            @RequestParam(value = "tags", required = false) String q_tags,
 
-            @RequestParam(value="count", required = false) String count_str,
+            @RequestParam(value = "count", required = false) String count_str,
 
             HttpServletRequest request) {
 
         int count = default_count;
-        if(count_str != null) {
+        if (count_str != null) {
             count = Math.min(Integer.parseInt(count_str), default_count);
         }
         long startTime = System.currentTimeMillis();

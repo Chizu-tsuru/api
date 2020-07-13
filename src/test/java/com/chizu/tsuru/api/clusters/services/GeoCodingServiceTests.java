@@ -1,11 +1,11 @@
 package com.chizu.tsuru.api.clusters.services;
 
 import com.chizu.tsuru.api.clusters.entities.Address;
-import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -16,13 +16,6 @@ public class GeoCodingServiceTests {
     @Autowired
     public GeoCodingServiceTests(GeocodingService geocodingService) {
         this.geocodingService = geocodingService;
-    }
-
-
-    @Test
-    public void getDataFromCoordinate_should_return_a_string_test() {
-        String result = geocodingService.getDataFromCoordinate(48.8, 2.5);
-        assertThat(result).isExactlyInstanceOf(String.class);
     }
 
     @Test

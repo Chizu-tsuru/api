@@ -6,7 +6,10 @@ import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
 import com.chizu.tsuru.api.config.Configuration;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
@@ -42,7 +45,7 @@ public class LuceneService {
     }
 
     @PostConstruct
-    public void setup(){
+    public void setup() {
         try {
             IndexWriter indexWriter = this.getIndexWriter();
 
@@ -50,11 +53,11 @@ public class LuceneService {
 
             List<Location> locationList = getLocations(this.locationRepository);
 
-            for(Location location : locationList){
+            for (Location location : locationList) {
                 addDoc(indexWriter, location);
             }
             this.closeIndexWriter(indexWriter);
-        }catch (IOException  e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -74,15 +77,14 @@ public class LuceneService {
 
     public void addLocations(List<Location> locations) throws IOException {
         IndexWriter indexWriter = this.getIndexWriter();
-        for(Location location : locations){
+        for (Location location : locations) {
             addDoc(indexWriter, location);
         }
         this.closeIndexWriter(indexWriter);
     }
 
 
-
-    public List<GetLocationLuceneDTO> searchLocationWithCustom(String field, String query, int count){
+    public List<GetLocationLuceneDTO> searchLocationWithCustom(String field, String query, int count) {
         try {
             return this.searchQuery(field, query, count);
         } catch (ParseException | IOException e) {
@@ -100,7 +102,7 @@ public class LuceneService {
             String q_administrative_area_2,
             String q_country,
             String q_tags,
-            int count){
+            int count) {
         try {
             return this.SearchMultipleQuery(q_latitude, q_longitude, q_city, q_area, q_administrative_area_1, q_administrative_area_2, q_country, q_tags, count);
         } catch (ParseException | IOException e) {
@@ -128,15 +130,15 @@ public class LuceneService {
 
         //Tag
         String tagToJoin = "";
-        for( Tag tag :location.getTags()){
-            tagToJoin = tagToJoin.concat(tag.getName()+";");
+        for (Tag tag : location.getTags()) {
+            tagToJoin = tagToJoin.concat(tag.getName() + ";");
         }
         doc.add(new TextField("tags", tagToJoin, Field.Store.YES));
 
         w.addDocument(doc);
     }
 
-    private List<Location> getLocations(LocationRepository locationRepository){
+    private List<Location> getLocations(LocationRepository locationRepository) {
         return locationRepository.findAll();
     }
 
@@ -145,7 +147,7 @@ public class LuceneService {
 
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(q,count);
+        TopDocs docs = searcher.search(q, count);
         ScoreDoc[] hits = docs.scoreDocs;
 
         return parseAndReturnResponse(hits);
@@ -183,28 +185,28 @@ public class LuceneService {
             int count) throws ParseException, IOException {
         var booleanQuerryBuilder = new BooleanQuery.Builder();
 
-        if(q_latitude != null)
+        if (q_latitude != null)
             booleanQuerryBuilder.add(new QueryParser("latitude", analyzer).parse(q_latitude), BooleanClause.Occur.MUST);
-        if(q_longitude != null)
+        if (q_longitude != null)
             booleanQuerryBuilder.add(new QueryParser("longitude", analyzer).parse(q_longitude), BooleanClause.Occur.MUST);
-        if(q_city != null)
+        if (q_city != null)
             booleanQuerryBuilder.add(new QueryParser("city", analyzer).parse(q_city), BooleanClause.Occur.MUST);
-        if(q_area != null)
+        if (q_area != null)
             booleanQuerryBuilder.add(new QueryParser("area", analyzer).parse(q_area), BooleanClause.Occur.MUST);
-        if(q_administrative_area_1 != null)
+        if (q_administrative_area_1 != null)
             booleanQuerryBuilder.add(new QueryParser("administrative_area_1", analyzer).parse(q_administrative_area_1), BooleanClause.Occur.MUST);
-        if(q_administrative_area_2 != null)
+        if (q_administrative_area_2 != null)
             booleanQuerryBuilder.add(new QueryParser("administrative_area_2", analyzer).parse(q_administrative_area_2), BooleanClause.Occur.MUST);
-        if(q_country != null)
+        if (q_country != null)
             booleanQuerryBuilder.add(new QueryParser("country", analyzer).parse(q_country), BooleanClause.Occur.MUST);
-        if(q_tags != null)
+        if (q_tags != null)
             booleanQuerryBuilder.add(new QueryParser("tags", analyzer).parse(q_tags), BooleanClause.Occur.MUST);
 
         BooleanQuery bq = booleanQuerryBuilder.build();
 
         IndexReader reader = DirectoryReader.open(index);
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(bq,count);
+        TopDocs docs = searcher.search(bq, count);
         ScoreDoc[] hits = docs.scoreDocs;
 
         return parseAndReturnResponse(hits);
