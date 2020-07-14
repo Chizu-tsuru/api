@@ -3,15 +3,15 @@ package com.chizu.tsuru.api.features.workspace.domain.entities;
 public class Address {
     private Integer addressId;
     private String area;
-    private String administrative_area_1;
-    private String administrative_area_2;
+    private String administrativeAreaOne;
+    private String administrativeAreaTwo;
     private String country;
     private String city;
 
-    public Address(String area, String administrative_area_1, String administrative_area_2, String country, String city) {
+    public Address(String area, String administrativeAreaOne, String administrativeAreaTwo, String country, String city) {
         this.area = area;
-        this.administrative_area_1 = administrative_area_1;
-        this.administrative_area_2 = administrative_area_2;
+        this.administrativeAreaOne = administrativeAreaOne;
+        this.administrativeAreaTwo = administrativeAreaTwo;
         this.country = country;
         this.city = city;
     }
@@ -32,20 +32,20 @@ public class Address {
         this.area = area;
     }
 
-    public String getAdministrative_area_1() {
-        return administrative_area_1;
+    public String getAdministrativeAreaOne() {
+        return administrativeAreaOne;
     }
 
-    public void setAdministrative_area_1(String administrative_area_1) {
-        this.administrative_area_1 = administrative_area_1;
+    public void setAdministrativeAreaOne(String administrativeAreaOne) {
+        this.administrativeAreaOne = administrativeAreaOne;
     }
 
-    public String getAdministrative_area_2() {
-        return administrative_area_2;
+    public String getAdministrativeAreaTwo() {
+        return administrativeAreaTwo;
     }
 
-    public void setAdministrative_area_2(String administrative_area_2) {
-        this.administrative_area_2 = administrative_area_2;
+    public void setAdministrativeAreaTwo(String administrativeAreaTwo) {
+        this.administrativeAreaTwo = administrativeAreaTwo;
     }
 
     public String getCountry() {

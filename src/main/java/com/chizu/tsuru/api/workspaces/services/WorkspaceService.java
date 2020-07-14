@@ -9,8 +9,9 @@ import com.chizu.tsuru.api.clusters.services.AddressService;
 import com.chizu.tsuru.api.clusters.services.ClusterService;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.LuceneService;
-import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
-import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.core.errors.NotFoundException;
+import com.chizu.tsuru.api.core.services.ResponseOldService;
+import com.chizu.tsuru.api.features.workspace.presentation.services.ResponseService;
 import com.chizu.tsuru.api.workspaces.dto.CreateLocationDTO;
 import com.chizu.tsuru.api.workspaces.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.workspaces.dto.GetWorkspaceDTO;
@@ -33,7 +34,7 @@ public class WorkspaceService {
     public final int LONGITUDE = 1;
     private final WorkspaceRepository workspaceRepository;
     private final ClusterRepository clusterRepository;
-    private final ResponseService responseService;
+    private final ResponseOldService responseService;
     private final LocationService locationService;
     private final ClusterService clusterService;
     private final AddressService addressService;
@@ -42,7 +43,7 @@ public class WorkspaceService {
     @Autowired
     public WorkspaceService(
             WorkspaceRepository workspaceRepository,
-            ClusterRepository clusterRepository, ResponseService responseService,
+            ClusterRepository clusterRepository, ResponseOldService responseService,
             LocationService locationService,
             AddressService addressService,
             ClusterService clusterService,

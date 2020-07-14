@@ -1,7 +1,7 @@
 package com.chizu.tsuru.api.workspaces.services;
 
 import com.chizu.tsuru.api.clusters.entities.Address;
-import com.chizu.tsuru.api.config.Configuration;
+import com.chizu.tsuru.api.core.config.Configuration;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -88,8 +88,8 @@ public class GeocodingService {
 
     public Address convertResponseStringToAddressObject(String response) {
         return Address.builder()
-                .administrative_area_1(getAdministrativeAreaLevel1FromCoordinate(response))
-                .administrative_area_2(getAdministrativeAreaLevel2FromCoordinate(response))
+                .administrativeAreaOne(getAdministrativeAreaLevel1FromCoordinate(response))
+                .administrativeAreaTwo(getAdministrativeAreaLevel2FromCoordinate(response))
                 .area(getAreaFromCoordinate(response))
                 .city(getCityFromCoordinate(response))
                 .country(getCountryFromCoordinate(response)).build();

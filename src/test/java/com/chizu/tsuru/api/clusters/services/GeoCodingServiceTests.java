@@ -36,14 +36,14 @@ public class GeoCodingServiceTests {
     public void getAddressFromCoordinate_should_return_an_address_and_administrative_area_1_should_be_null_test() {
         String result = geocodingService.getDataFromCoordinate(48.8, 2.5);
         Address address = geocodingService.convertResponseStringToAddressObject(result);
-        assertThat(address.getAdministrative_area_1()).isEqualTo("Île-de-France");
+        assertThat(address.getAdministrativeAreaOne()).isEqualTo("Île-de-France");
     }
 
     @Test
     public void getAddressFromCoordinate_should_return_an_address_and_administrative_area_2_should_be_a_string_test() {
         String result = geocodingService.getDataFromCoordinate(48.8, 2.5);
         Address address = geocodingService.convertResponseStringToAddressObject(result);
-        assertThat(address.getAdministrative_area_2()).isEqualTo("Val-de-Marne");
+        assertThat(address.getAdministrativeAreaTwo()).isEqualTo("Val-de-Marne");
     }
 
     @Test

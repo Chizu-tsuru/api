@@ -16,7 +16,7 @@ public class GetWorkspaces implements UseCase<List<Workspace>, NoParams> {
     private final WorkspaceRepository workspaceRepository;
 
     @Autowired
-    public GetWorkspaces(@Qualifier("workspaceMysqlRepository") WorkspaceRepository workspaceRepository) {
+    public GetWorkspaces(@Qualifier("workspaceDataSourceRepository") WorkspaceRepository workspaceRepository) {
         this.workspaceRepository = workspaceRepository;
     }
 

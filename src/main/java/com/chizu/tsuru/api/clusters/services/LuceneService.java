@@ -4,7 +4,7 @@ import com.chizu.tsuru.api.clusters.dto.GetLocationLuceneDTO;
 import com.chizu.tsuru.api.clusters.entities.Location;
 import com.chizu.tsuru.api.clusters.entities.Tag;
 import com.chizu.tsuru.api.clusters.repositories.LocationRepository;
-import com.chizu.tsuru.api.config.Configuration;
+import com.chizu.tsuru.api.core.config.Configuration;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -112,6 +112,7 @@ public class LuceneService {
     }
 
     private void addDoc(IndexWriter w, Location location) throws IOException {
+        System.out.println(location.getCluster().getAddress());
         Document doc = new Document();
         //Location
         doc.add(new StoredField("locationId", location.getLocationId()));
@@ -124,8 +125,8 @@ public class LuceneService {
         // Address
         doc.add(new TextField("city", location.getCluster().getAddress().getCity(), Field.Store.YES));
         doc.add(new TextField("area", location.getCluster().getAddress().getArea(), Field.Store.YES));
-        doc.add(new TextField("administrative_area_1", location.getCluster().getAddress().getAdministrative_area_1(), Field.Store.YES));
-        doc.add(new TextField("administrative_area_2", location.getCluster().getAddress().getAdministrative_area_2(), Field.Store.YES));
+        doc.add(new TextField("administrative_area_1", location.getCluster().getAddress().getAdministrativeAreaOne(), Field.Store.YES));
+        doc.add(new TextField("administrative_area_2", location.getCluster().getAddress().getAdministrativeAreaTwo(), Field.Store.YES));
         doc.add(new TextField("country", location.getCluster().getAddress().getCountry(), Field.Store.YES));
 
         //Tag

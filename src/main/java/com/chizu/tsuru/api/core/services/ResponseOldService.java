@@ -60,8 +60,8 @@ public class ResponseOldService {
     public GetAddressDTO getAddressDTO(Address a) {
         return GetAddressDTO.builder()
                 .addressId(a.getAddressId())
-                .administrative_area_1(a.getAdministrative_area_1())
-                .administrative_area_2(a.getAdministrative_area_2())
+                .administrative_area_1(a.getAdministrativeAreaOne())
+                .administrative_area_2(a.getAdministrativeAreaTwo())
                 .area(a.getArea())
                 .city(a.getCity())
                 .country(a.getCountry())

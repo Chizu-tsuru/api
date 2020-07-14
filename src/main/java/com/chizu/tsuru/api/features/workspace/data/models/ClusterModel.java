@@ -32,7 +32,8 @@ public class ClusterModel {
     @OneToMany(mappedBy = "cluster", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LocationModel> locations = new ArrayList<>();
 
-    @OneToOne(mappedBy = "cluster")
+    @OneToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
     private AddressModel address;
 
     public ClusterModel() {
@@ -123,7 +124,7 @@ public class ClusterModel {
 
     public Cluster toCluster() {
         var locs = locations.stream().map(LocationModel::toLocation).collect(Collectors.toList());
-        return new Cluster(clusterId, longitude, latitude, area, locs);
+        return new Cluster(clusterId, longitude, latitude, area, locs, address.toAddress());
     }
 
     public static ClusterModel fromCluster(Cluster cluster, WorkspaceModel workspaceModel) {

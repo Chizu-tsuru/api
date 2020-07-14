@@ -4,7 +4,6 @@ import com.chizu.tsuru.api.clusters.entities.Address;
 import com.chizu.tsuru.api.clusters.entities.Cluster;
 import com.chizu.tsuru.api.core.errors.NotFoundException;
 import com.chizu.tsuru.api.clusters.repositories.AddressRepository;
-import com.chizu.tsuru.api.shared.exceptions.NotFoundException;
 import com.chizu.tsuru.api.workspaces.services.GeocodingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

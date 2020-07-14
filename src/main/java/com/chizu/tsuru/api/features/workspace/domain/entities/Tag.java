@@ -11,6 +11,10 @@ public class Tag {
         this.name = name;
     }
 
+    public Tag(String name) {
+        this.name = name;
+    }
+
     public void setTagId(Integer tagId) {
         this.tagId = tagId;
     }

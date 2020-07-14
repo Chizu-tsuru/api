@@ -44,8 +44,8 @@ public class AddressServiceTests {
 
         Address address = Address.builder()
                 .addressId(1)
-                .administrative_area_1("administrative_area_1")
-                .administrative_area_2("administrative_area_2")
+                .administrativeAreaOne("administrative_area_1")
+                .administrativeAreaTwo("administrative_area_2")
                 .area("area")
                 .city("city")
                 .country("country")

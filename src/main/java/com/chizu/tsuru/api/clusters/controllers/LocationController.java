@@ -4,8 +4,8 @@ import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
 import com.chizu.tsuru.api.clusters.dto.GetLocationLuceneDTO;
 import com.chizu.tsuru.api.clusters.services.LocationService;
 import com.chizu.tsuru.api.clusters.services.LuceneService;
-import com.chizu.tsuru.api.config.Configuration;
-import com.chizu.tsuru.api.shared.services.ResponseService;
+import com.chizu.tsuru.api.core.config.Configuration;
+import com.chizu.tsuru.api.core.services.ResponseOldService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,13 +17,13 @@ import java.util.List;
 public class LocationController {
 
     private final LocationService locationService;
-    private final ResponseService responseService;
+    private final ResponseOldService responseService;
     private final LuceneService luceneService;
     private final Configuration configuration;
     private final int default_count;
 
     public LocationController(LocationService locationService,
-                              ResponseService responseService,
+                              ResponseOldService responseService,
                               LuceneService luceneService,
                               Configuration configuration) {
         this.locationService = locationService;

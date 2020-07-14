@@ -14,7 +14,7 @@ public class CreateWorkspaceDTO {
 
     public CreateWorkspaceDTO(String name, double minLat, double minLong, double maxLat, double maxLong, List<CreateLocationDTO> locations) {
 
-        if(minLat < maxLat && minLong < maxLong) {
+        if(minLat > maxLat) {
             throw new BadRequestException("limitation point are invalid");
         }
 
@@ -51,9 +51,5 @@ public class CreateWorkspaceDTO {
 
     public List<CreateLocationDTO> getLocations() {
         return locations;
-    }
-
-    public boolean isValid() {
-        return minLat < maxLat && minLong < maxLong;
     }
 }

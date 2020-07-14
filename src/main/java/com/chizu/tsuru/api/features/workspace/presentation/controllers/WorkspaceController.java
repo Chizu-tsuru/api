@@ -3,8 +3,10 @@ package com.chizu.tsuru.api.features.workspace.presentation.controllers;
 import com.chizu.tsuru.api.core.useCases.NoParams;
 import com.chizu.tsuru.api.features.workspace.domain.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.api.features.workspace.domain.useCases.CreateWorkspace;
+import com.chizu.tsuru.api.features.workspace.domain.useCases.GetClustersByWorkspace;
 import com.chizu.tsuru.api.features.workspace.domain.useCases.GetWorkspaceById;
 import com.chizu.tsuru.api.features.workspace.domain.useCases.GetWorkspaces;
+import com.chizu.tsuru.api.features.workspace.presentation.dto.GetClusterDTO;
 import com.chizu.tsuru.api.features.workspace.presentation.services.ResponseService;
 import com.chizu.tsuru.api.features.workspace.presentation.dto.GetWorkspaceDTO;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +23,15 @@ public class WorkspaceController {
     final GetWorkspaces getWorkspaces;
     final GetWorkspaceById getWorkspaceById;
     final CreateWorkspace createWorkspace;
+    final GetClustersByWorkspace getClustersByWorkspace;
 
     public WorkspaceController(ResponseService responseService, GetWorkspaces getWorkspaces,
-                               GetWorkspaceById getWorkspaceById, CreateWorkspace createWorkspace) {
+                               GetWorkspaceById getWorkspaceById, CreateWorkspace createWorkspace, GetClustersByWorkspace getClustersByWorkspace) {
         this.responseService = responseService;
         this.getWorkspaces = getWorkspaces;
         this.getWorkspaceById = getWorkspaceById;
         this.createWorkspace = createWorkspace;
+        this.getClustersByWorkspace = getClustersByWorkspace;
     }
 
     @GetMapping
@@ -40,6 +44,13 @@ public class WorkspaceController {
     public GetWorkspaceDTO getWorkspace(@PathVariable Integer workspaceId) {
         var workspace = getWorkspaceById.execute(workspaceId);
         return responseService.workspaceToDTO(workspace);
+    }
+
+    @GetMapping("/{idWorkspace}/clusters")
+    public List<GetClusterDTO> getClustersByWorkspace(@PathVariable("idWorkspace") Integer workspaceId) {
+        var clusters = getClustersByWorkspace.execute(workspaceId);
+        return responseService.clustersToDTO(clusters);
+
     }
 
     @PostMapping

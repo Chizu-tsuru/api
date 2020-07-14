@@ -1,11 +1,9 @@
 package com.chizu.tsuru.api.features.workspace.data.models;
+import com.chizu.tsuru.api.core.services.JsonParsingService;
 import com.chizu.tsuru.api.features.workspace.domain.entities.Address;
-import com.chizu.tsuru.api.features.workspace.domain.entities.Location;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 
 import javax.persistence.*;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "address")
@@ -17,16 +15,15 @@ public class AddressModel {
 
     private String area;
 
-    private String administrative_area_1;
+    private String administrativeAreaOne;
 
-    private String administrative_area_2;
+    private String administrativeAreaTwo;
 
     private String country;
 
     private String city;
 
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(name = "cluster_id")
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
     private ClusterModel cluster;
 
     public AddressModel() {
@@ -35,11 +32,20 @@ public class AddressModel {
     public AddressModel(String area, String administrative_area_1, String administrative_area_2, String country,
                         String city, ClusterModel clusterModel) {
         this.area = area;
-        this.administrative_area_1 = administrative_area_1;
-        this.administrative_area_2 = administrative_area_2;
+        this.administrativeAreaOne = administrative_area_1;
+        this.administrativeAreaTwo = administrative_area_2;
         this.country = country;
         this.city = city;
         this.cluster = clusterModel;
+    }
+
+    public AddressModel(String area, String administrative_area_1, String administrative_area_2, String country,
+                        String city) {
+        this.area = area;
+        this.administrativeAreaOne = administrative_area_1;
+        this.administrativeAreaTwo = administrative_area_2;
+        this.country = country;
+        this.city = city;
     }
 
     public Integer getAddressId() {
@@ -58,20 +64,20 @@ public class AddressModel {
         this.area = area;
     }
 
-    public String getAdministrative_area_1() {
-        return administrative_area_1;
+    public String getAdministrativeAreaOne() {
+        return administrativeAreaOne;
     }
 
-    public void setAdministrative_area_1(String administrative_area_1) {
-        this.administrative_area_1 = administrative_area_1;
+    public void setAdministrativeAreaOne(String administrative_area_1) {
+        this.administrativeAreaOne = administrative_area_1;
     }
 
-    public String getAdministrative_area_2() {
-        return administrative_area_2;
+    public String getAdministrativeAreaTwo() {
+        return administrativeAreaTwo;
     }
 
-    public void setAdministrative_area_2(String administrative_area_2) {
-        this.administrative_area_2 = administrative_area_2;
+    public void setAdministrativeAreaTwo(String administrative_area_2) {
+        this.administrativeAreaTwo = administrative_area_2;
     }
 
     public String getCountry() {
@@ -98,12 +104,28 @@ public class AddressModel {
         this.cluster = cluster;
     }
 
-    public Address toLocation() {
-        return new Address(area, administrative_area_1, administrative_area_2, country, city);
+    public Address toAddress() {
+        return new Address(area, administrativeAreaOne, administrativeAreaTwo, country, city);
     }
 
     public static AddressModel fromAddress(Address address, ClusterModel clusterModel) {
-        return new AddressModel(address.getArea(), address.getAdministrative_area_1(),
-                address.getAdministrative_area_2(), address.getCountry(), address.getCity(), clusterModel);
+        if (address == null) return null;
+        return new AddressModel(
+                address.getArea(),
+                address.getAdministrativeAreaOne(),
+                address.getAdministrativeAreaTwo(),
+                address.getCountry(),
+                address.getCity(),
+                clusterModel);
+    }
+
+    public static AddressModel FromJson(JSONObject jsonObject) {
+        return new AddressModel(
+                JsonParsingService.parseJson("postal_code", jsonObject),
+                JsonParsingService.parseJson("administrative_area_level_1", jsonObject),
+                JsonParsingService.parseJson("administrative_area_level_2", jsonObject),
+                JsonParsingService.parseJson("country", jsonObject),
+                JsonParsingService.parseJson("locality", jsonObject)
+        );
     }
 }

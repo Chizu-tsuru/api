@@ -23,7 +23,7 @@ public class ClusterController {
     private final TravelService travelService;
     private final MinDistAvgService minDistAvgService;
 
-    public ClusterController(ResponseService responseService, ClusterService clusterService,
+    public ClusterController(ResponseOldService responseService, ClusterService clusterService,
                              LocationService locationService, TravelService travelService, MinDistAvgService minDistAvgService) {
         this.responseService = responseService;
         this.clusterService = clusterService;

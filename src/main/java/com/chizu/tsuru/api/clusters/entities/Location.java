@@ -1,6 +1,7 @@
 package com.chizu.tsuru.api.clusters.entities;
 
 import com.chizu.tsuru.api.clusters.dto.GetLocationDTO;
+import com.chizu.tsuru.api.features.workspace.data.models.TagModel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -34,11 +35,7 @@ public class Location {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinTable(name = "location_tag",
-            joinColumns = @JoinColumn(name = "location_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Tag> tags;
 
     public GetLocationDTO toResponse() {

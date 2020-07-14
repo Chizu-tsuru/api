@@ -1,9 +1,6 @@
 package com.chizu.tsuru.api.clusters.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,12 +20,16 @@ public class Address implements Serializable {
 
     private String area;
 
-    private String administrative_area_1;
+    private String administrativeAreaOne;
 
-    private String administrative_area_2;
+    private String administrativeAreaTwo;
 
     private String country;
 
     private String city;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "address", cascade = CascadeType.ALL)
+    private Cluster cluster;
 
 }

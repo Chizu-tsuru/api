@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class GetWorkspaceById implements UseCase<Workspace, Integer> {
     private final WorkspaceRepository workspaceRepository;
 
-    public GetWorkspaceById(@Qualifier("workspaceMysqlRepository") WorkspaceRepository workspaceRepository) {
+    public GetWorkspaceById(@Qualifier("workspaceDataSourceRepository") WorkspaceRepository workspaceRepository) {
         this.workspaceRepository = workspaceRepository;
     }
 

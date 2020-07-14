@@ -1,4 +1,5 @@
 package com.chizu.tsuru.api.features.workspace.domain.entities;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,15 +8,17 @@ public class Cluster {
     private double longitude;
     private double latitude;
     private String area;
-    private List<Location> locations;
+    private List<Location> locations = new ArrayList<>();
     private Address address;
 
-    public Cluster(Integer clusterId, double longitude, double latitude, String area, List<Location> locations) {
+    public Cluster(Integer clusterId, double longitude, double latitude,
+                   String area, List<Location> locations, Address address) {
         this.clusterId = clusterId;
         this.longitude = longitude;
         this.latitude = latitude;
         this.area = area;
         this.locations = locations;
+        this.address = address;
     }
 
     public Cluster() {}

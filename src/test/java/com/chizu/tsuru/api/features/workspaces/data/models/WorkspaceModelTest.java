@@ -27,8 +27,8 @@ public class WorkspaceModelTest {
         workspaceModel.setClusters(clusters);
         clusters.add(new ClusterModel(2, 2.0, 2.0, "area", workspaceModel));
         clusters.add(new ClusterModel(3, 2.0, 3.0, "area", workspaceModel));
-        workspace.getClusters().add(new Cluster(2, 2.0, 2.0, "area", new ArrayList<>()));
-        workspace.getClusters().add(new Cluster(3, 2.0, 3.0, "area", new ArrayList<>()));
+        workspace.getClusters().add(new Cluster(2, 2.0, 2.0, "area", new ArrayList<>(), null));
+        workspace.getClusters().add(new Cluster(3, 2.0, 3.0, "area", new ArrayList<>(), null));
     }
 
     @Test

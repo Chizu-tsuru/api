@@ -1,5 +1,6 @@
 package com.chizu.tsuru.api.clusters.entities;
 
+import com.chizu.tsuru.api.features.workspace.data.models.LocationModel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Tag {
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "tags")
-    private List<Location> locations;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "location_id")
+    private Location location;
 }
