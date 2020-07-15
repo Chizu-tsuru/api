@@ -51,7 +51,10 @@ public class LocationController {
         }
         long startTime = System.currentTimeMillis();
 
-        String requestIp = request.getRemoteAddr();
+        String requestIp = request.getHeader("X-FORWARDED-FOR");
+        if (requestIp == null || "".equals(requestIp)) {
+            requestIp = request.getRemoteAddr();
+        }
         String requestUrl = request.getRequestURL().toString();
         String requestParam = request.getQueryString();
         String fullRequest = requestUrl + "?" + requestParam;
@@ -96,7 +99,10 @@ public class LocationController {
         }
         long startTime = System.currentTimeMillis();
 
-        String requestIp = request.getRemoteAddr();
+        String requestIp = request.getHeader("X-FORWARDED-FOR");
+        if (requestIp == null || "".equals(requestIp)) {
+            requestIp = request.getRemoteAddr();
+        }
         String requestUrl = request.getRequestURL().toString();
         String requestParam = request.getQueryString();
         String fullRequest = requestUrl + "?" + requestParam;
