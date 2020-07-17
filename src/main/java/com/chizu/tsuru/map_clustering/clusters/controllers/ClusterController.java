@@ -32,11 +32,6 @@ public class ClusterController {
         this.minDistAvgService = minDistAvgService;
     }
 
-    @GetMapping("/{idCluster}")
-    public GetClusterDTO getCluster(@PathVariable("idCluster") Integer idCluster) {
-        return this.responseService.getClusterDTO(this.clusterService.getCluster(idCluster));
-    }
-
     @GetMapping("/{idCluster}/travel")
     public GetTravelDTO getPath(@PathVariable("idCluster") Integer idCluster,
                                 @RequestParam() Double longitude,

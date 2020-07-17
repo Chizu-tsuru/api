@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class ResponseService {
+public class ClusteringResponseService {
     final URIService uriService;
 
-    public ResponseService(URIService uriService) {
+    public ClusteringResponseService(URIService uriService) {
         this.uriService = uriService;
     }
 

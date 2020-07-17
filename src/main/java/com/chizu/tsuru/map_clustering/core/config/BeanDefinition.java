@@ -2,6 +2,7 @@ package com.chizu.tsuru.map_clustering.core.config;
 
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetClusterById;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetMinimumDistanceAverage;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.CreateWorkspace;
@@ -45,5 +46,9 @@ public class BeanDefinition {
     @Bean
     public GetMinimumDistanceAverage getMinimumDistanceAverage() {
         return new GetMinimumDistanceAverage(clusterProcessingRepository, mapService);
+    }
+    @Bean
+    public GetClusterById getClusterById() {
+        return new GetClusterById(clusterProcessingRepository);
     }
 }
