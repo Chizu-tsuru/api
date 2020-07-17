@@ -1,4 +1,4 @@
-package com.chizu.tsuru.map_clustering.features.clustering.data.repository;
+package com.chizu.tsuru.map_clustering.features.clustering.data.repositories;
 
 import com.chizu.tsuru.map_clustering.core.errors.NotFoundException;
 import com.chizu.tsuru.map_clustering.features.clustering.data.datasources.ClusteringMysqlDataSource;
@@ -7,7 +7,7 @@ import com.chizu.tsuru.map_clustering.features.clustering.data.models.WorkspaceM
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Address;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Cluster;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Workspace;
-import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.repositories.ClusteringRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

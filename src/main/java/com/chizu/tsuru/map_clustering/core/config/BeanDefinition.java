@@ -1,11 +1,11 @@
 package com.chizu.tsuru.map_clustering.core.config;
 
-import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repositories.ClusterProcessingRepository;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetClusterById;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetMinimumDistanceAverage;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetTravelPath;
-import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.repositories.ClusteringRepository;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.CreateWorkspace;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.GetClustersByWorkspace;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.GetWorkspaceById;

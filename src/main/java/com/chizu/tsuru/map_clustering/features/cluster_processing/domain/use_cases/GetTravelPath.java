@@ -5,7 +5,7 @@ import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.dto.Get
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.Cluster;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.Location;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.TravelPath;
-import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repositories.ClusterProcessingRepository;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
 
 import java.util.ArrayList;

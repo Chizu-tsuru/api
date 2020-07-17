@@ -4,7 +4,7 @@ package com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_ca
 import com.chizu.tsuru.map_clustering.core.useCases.UseCase;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.Location;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.MinimumDistanceAverage;
-import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repositories.ClusterProcessingRepository;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
 
 import java.util.ArrayList;

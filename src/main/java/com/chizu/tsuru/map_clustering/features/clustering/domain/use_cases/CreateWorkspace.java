@@ -4,7 +4,7 @@ import com.chizu.tsuru.map_clustering.core.useCases.UseCase;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.dto.CreateLocationDTO;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.dto.CreateWorkspaceDTO;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.*;
-import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.repositories.ClusteringRepository;
 
 import java.util.ArrayList;
 import java.util.List;

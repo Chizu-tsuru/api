@@ -2,7 +2,7 @@ package com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases;
 
 import com.chizu.tsuru.map_clustering.core.useCases.UseCase;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Cluster;
-import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.repositories.ClusteringRepository;
 
 import java.util.List;
 

@@ -1,9 +1,9 @@
-package com.chizu.tsuru.map_clustering.features.cluster_processing.data.repository;
+package com.chizu.tsuru.map_clustering.features.cluster_processing.data.repositories;
 
 import com.chizu.tsuru.map_clustering.core.errors.NotFoundException;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.data.datasources.ClusterProcessingMysqlDataSource;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.Cluster;
-import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repositories.ClusterProcessingRepository;
 import org.springframework.stereotype.Service;
 
 @Service

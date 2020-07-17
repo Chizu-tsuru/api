@@ -1,4 +1,4 @@
-package com.chizu.tsuru.map_clustering.features.clustering.data.repository;
+package com.chizu.tsuru.map_clustering.features.clustering.data.repositories;
 
 import com.chizu.tsuru.map_clustering.features.clustering.data.datasources.ClusteringMysqlDataSource;
 import com.chizu.tsuru.map_clustering.features.clustering.data.datasources.ClusteringGoogleApiDataSource;

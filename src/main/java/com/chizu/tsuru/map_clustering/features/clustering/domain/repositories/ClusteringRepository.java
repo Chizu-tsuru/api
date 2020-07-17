@@ -1,4 +1,4 @@
-package com.chizu.tsuru.map_clustering.features.clustering.domain.repository;
+package com.chizu.tsuru.map_clustering.features.clustering.domain.repositories;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Address;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Cluster;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Workspace;
