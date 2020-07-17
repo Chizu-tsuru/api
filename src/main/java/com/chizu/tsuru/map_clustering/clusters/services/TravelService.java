@@ -3,7 +3,7 @@ package com.chizu.tsuru.map_clustering.clusters.services;
 import com.chizu.tsuru.map_clustering.clusters.dto.GetTravelDTO;
 import com.chizu.tsuru.map_clustering.clusters.entities.Cluster;
 import com.chizu.tsuru.map_clustering.clusters.entities.Location;
-import com.chizu.tsuru.map_clustering.core.services.MapService;
+import com.chizu.tsuru.map_clustering.core.services.MapOldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class TravelService {
 
     private final ClusterService clusterService;
-    private final MapService mapService;
+    private final MapOldService mapOldService;
 
     @Autowired
-    public TravelService(ClusterService clusterService, MapService mapService) {
+    public TravelService(ClusterService clusterService, MapOldService mapOldService) {
         this.clusterService = clusterService;
-        this.mapService = mapService;
+        this.mapOldService = mapOldService;
     }
 
     public GetTravelDTO getTravel(Integer clusterId, Double longitude, Double latitude) {
@@ -39,12 +39,12 @@ public class TravelService {
         while (cluster.getLocations().size() > 0) {
             Optional<Location> minLocation = cluster.getLocations()
                     .stream()
-                    .min((Comparator.comparing(location -> mapService.getDistance(reference, location))));
+                    .min((Comparator.comparing(location -> mapOldService.getDistance(reference, location))));
 
             if (minLocation.isPresent()) {
                 Location min = minLocation.get();
                 locations.add(min);
-                distanceTotal += mapService.getDistance(reference, min);
+                distanceTotal += mapOldService.getDistance(reference, min);
                 reference.setLatitude(min.getLatitude());
                 reference.setLongitude(min.getLongitude());
                 cluster.getLocations().remove(min);

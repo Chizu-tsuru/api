@@ -45,12 +45,6 @@ public class ClusterController {
         return this.travelService.getTravel(idCluster, longitude, latitude);
     }
 
-    @GetMapping("/{idCluster}/minMaxAvg")
-    public GetMinMaxAvgDTO getMinMaxAvg(@PathVariable("idCluster") Integer idCluster) {
-        var cluster = this.clusterService.getCluster(idCluster);
-        return this.minDistAvgService.minAvgDist(cluster.getLocations());
-    }
-
     @GetMapping("/{idCluster}/locations")
     public List<GetLocationDTO> getLocationFromCluster(@PathVariable("idCluster") Integer idCluster) {
         return this.locationService.getLocationsByCluster(idCluster);

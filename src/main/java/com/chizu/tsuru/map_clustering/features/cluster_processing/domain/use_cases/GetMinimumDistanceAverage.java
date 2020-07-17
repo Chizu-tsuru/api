@@ -1,52 +1,34 @@
-package com.chizu.tsuru.map_clustering.clusters.services;
+package com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases;
 
-import com.chizu.tsuru.map_clustering.clusters.dto.GetMinMaxAvgDTO;
-import com.chizu.tsuru.map_clustering.clusters.entities.Location;
-import com.chizu.tsuru.map_clustering.core.services.MapOldService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.NotNull;
+import com.chizu.tsuru.map_clustering.core.useCases.UseCase;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.Location;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.entities.MinimumDistanceAverage;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.repository.ClusterProcessingRepository;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
-public class MinDistAvgService {
+public class GetMinimumDistanceAverage implements UseCase<MinimumDistanceAverage, Integer> {
+    private final ClusterProcessingRepository clusterProcessingRepository;
+    private final MapService mapService;
 
-    private final MapOldService mapOldService;
-
-    @Autowired
-    public MinDistAvgService(MapOldService mapOldService) {
-        this.mapOldService = mapOldService;
+    public GetMinimumDistanceAverage(ClusterProcessingRepository clusterProcessingRepository, MapService mapService) {
+        this.clusterProcessingRepository = clusterProcessingRepository;
+        this.mapService = mapService;
     }
 
-    public double anyClosestDist(@NotNull List<Location> locations) {
-        List<Double> dist = new ArrayList<>();
-        double minDist, currentDist;
-        for (int i = 0; i < locations.size(); i++) {
-            minDist = -1;
-            for (int j = 0; j < locations.size(); j++) {
-                if (i != j) {
-                    currentDist = this.mapOldService.getDistance(locations.get(i), locations.get(j));
-                    if (currentDist < minDist || minDist == -1)
-                        minDist = currentDist;
-                }
-            }
-            dist.add(minDist);
-        }
-        return dist
-                .stream()
-                .reduce(0.0, Double::sum)
-                / dist.size();
+    @Override
+    public MinimumDistanceAverage execute(Integer integer) {
+        var cluster = clusterProcessingRepository.getClusterById(integer);
+        return calculateMinimumDistanceAverage(cluster.getLocations());
     }
 
-    public GetMinMaxAvgDTO minAvgDist(List<Location> locations) {
+    public MinimumDistanceAverage calculateMinimumDistanceAverage(List<Location> locations) {
         if (locations.size() < 2) {
-            return GetMinMaxAvgDTO.builder()
-                    .minMaxAvgDistance(0.0)
-                    .numberLocations(locations.size())
-                    .build();
+            return new MinimumDistanceAverage(locations.size(), 0.0);
         }
         List<Local> locals = locationToLocal(locations);
 
@@ -73,16 +55,14 @@ public class MinDistAvgService {
                     }
             }
         }
-        return GetMinMaxAvgDTO.builder()
-                .minMaxAvgDistance(kruskalToDist(graph))
-                .numberLocations(locations.size())
-                .build();
+
+        return new MinimumDistanceAverage(locations.size(), kruskalToDist(graph));
     }
 
     private double kruskalToDist(List<Edge> edges) {
         List<Double> res = new ArrayList<>();
         for (Edge edge : edges) {
-            res.add(this.mapOldService.getDistance(edge.l1.toLocation(), edge.l2.toLocation()));
+            res.add(this.mapService.getDistance(edge.l1.toLocation(), edge.l2.toLocation()));
         }
         return res
                 .stream()
@@ -93,7 +73,7 @@ public class MinDistAvgService {
     private List<Local> locationToLocal(List<Location> locations) {
         List<Local> locals = new ArrayList<>();
         for (Location location : locations)
-            locals.add(new Local(location.getLongitude(), location.getLatitude()));
+            locals.add(new GetMinimumDistanceAverage.Local(location.getLongitude(), location.getLatitude()));
         return locals;
     }
 
@@ -117,7 +97,7 @@ public class MinDistAvgService {
         }
 
         Location toLocation() {
-            return Location.builder().latitude(this.latitude).longitude(this.longitude).build();
+            return new Location(this.latitude, this.longitude);
         }
     }
 
@@ -139,5 +119,4 @@ public class MinDistAvgService {
             return weight;
         }
     }
-
 }

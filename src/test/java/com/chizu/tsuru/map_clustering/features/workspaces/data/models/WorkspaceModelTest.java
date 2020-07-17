@@ -1,9 +1,9 @@
 package com.chizu.tsuru.map_clustering.features.workspaces.data.models;
 
-import com.chizu.tsuru.map_clustering.features.workspace.data.models.ClusterModel;
-import com.chizu.tsuru.map_clustering.features.workspace.data.models.WorkspaceModel;
-import com.chizu.tsuru.map_clustering.features.workspace.domain.entities.Cluster;
-import com.chizu.tsuru.map_clustering.features.workspace.domain.entities.Workspace;
+import com.chizu.tsuru.map_clustering.features.clustering.data.models.ClusterModel;
+import com.chizu.tsuru.map_clustering.features.clustering.data.models.WorkspaceModel;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Cluster;
+import com.chizu.tsuru.map_clustering.features.clustering.domain.entities.Workspace;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
