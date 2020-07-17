@@ -4,6 +4,7 @@ import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.reposit
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.services.MapService;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetClusterById;
 import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetMinimumDistanceAverage;
+import com.chizu.tsuru.map_clustering.features.cluster_processing.domain.use_cases.GetTravelPath;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.repository.ClusteringRepository;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.CreateWorkspace;
 import com.chizu.tsuru.map_clustering.features.clustering.domain.use_cases.GetClustersByWorkspace;
@@ -50,5 +51,9 @@ public class BeanDefinition {
     @Bean
     public GetClusterById getClusterById() {
         return new GetClusterById(clusterProcessingRepository);
+    }
+    @Bean
+    public GetTravelPath getTravelPath() {
+        return new GetTravelPath(clusterProcessingRepository, mapService);
     }
 }
